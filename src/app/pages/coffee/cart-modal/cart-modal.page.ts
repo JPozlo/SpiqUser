@@ -51,15 +51,7 @@ export class CartModalPage implements OnInit {
   async checkout() {
     // Perfom PayPal or Stripe checkout process
     this.coffeeService.resetCart();
-
-    // let alert = await this.alertCtrl.create({
-    //   header: 'Thanks for your Order!',
-    //   message: `The total price is ${this.totalPrice}`,
-    //   buttons: ['OK']
-    // });
-    // alert.present().then(() => {
     this.firebaseService.updateCoffeeSession(this.totalPrice);
-    this.modalCtrl.dismiss();
-    // });
+    this.modalCtrl.dismiss(this.totalPrice);
   }
 }

@@ -24,16 +24,16 @@ const routes: Routes = [
     loadChildren: () =>
       import("./pages/menu/settings/settings.module").then(
         m => m.SettingsPageModule
-      ),
-    canLoad: [AuthGuard]
+      )
+    // canLoad: [AuthGuard]
   },
   {
     path: "profile",
     loadChildren: () =>
       import("./pages/menu/profile/profile.module").then(
         m => m.ProfilePageModule
-      ),
-    canLoad: [AuthGuard]
+      )
+    // canLoad: [AuthGuard]
   },
   {
     path: "verify-email",
@@ -53,8 +53,8 @@ const routes: Routes = [
   {
     path: "tab",
     loadChildren: () =>
-      import("./pages/tab/tab.module").then(m => m.TabPageModule),
-    canLoad: [AuthGuard]
+      import("./pages/tab/tab.module").then(m => m.TabPageModule)
+    // canLoad: [AuthGuard]
   },
   {
     path: "phoneauth",

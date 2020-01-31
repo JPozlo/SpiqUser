@@ -120,17 +120,17 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       });
 
-      // this.afAuth.auth.onAuthStateChanged(user => {
-      //   if (user) {
-      //     this.navigate(["/", "tab", "tabs", "map"]);
-      //     this.splashScreen.hide();
-      //     // this.router.navigateByUrl('/tab');
-      //   } else {
-      //     this.navigate(["/", "login"]);
-      //     this.splashScreen.hide();
-      //     // this.router.navigateByUrl('/login');
-      //   }
-      // });
+      this.afAuth.auth.onAuthStateChanged(user => {
+        if (user) {
+          this.navigate(["/", "tab", "tabs", "map"]);
+          this.splashScreen.hide();
+          // this.router.navigateByUrl('/tab');
+        } else {
+          this.navigate(["/", "login"]);
+          this.splashScreen.hide();
+          // this.router.navigateByUrl('/login');
+        }
+      });
       timer(3500).subscribe(() => (this.showSplash = false));
       this.automaticDetection();
       this.notificationSetup();

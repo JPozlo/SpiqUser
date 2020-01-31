@@ -5,8 +5,7 @@ import { AuthService } from "./auth.service";
 import { AngularFireAuth } from "@angular/fire/auth";
 import {
   AngularFirestore,
-  AngularFirestoreCollection,
-  Firebase
+  AngularFirestoreCollection
 } from "@angular/fire/firestore";
 import { Injectable } from "@angular/core";
 
@@ -95,7 +94,8 @@ export class FirebaseService {
     const user = this.authService.getUser();
     const userID = user.uid;
     db.collection("sessions")
-      .where("isActive", "==", true).where('id', '==', userID)
+      .where("isActive", "==", true)
+      .where("id", "==", userID)
       .get()
       .then(
         snap => {
@@ -172,7 +172,8 @@ export class FirebaseService {
     const user = this.authService.getUser();
     const userID = user.uid;
     db.collection("sessions")
-      .where("isActive", "==", true).where('id', '==', userID)
+      .where("isActive", "==", true)
+      .where("id", "==", userID)
       .get()
       .then(
         snap => {

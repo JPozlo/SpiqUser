@@ -61,9 +61,10 @@ export class CoffeePage implements OnInit {
       component: CartModalPage,
       cssClass: "cart-modal"
     });
-    modal.onWillDismiss().then(() => {
+    modal.onDidDismiss().then(data => {
       this.fab.nativeElement.classList.remove("animated", "bounceOutLeft");
       this.animateCSS("bounceInLeft");
+      this.totalPrice = data.data;
     });
     modal.present();
   }
