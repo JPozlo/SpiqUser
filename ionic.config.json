@@ -1,0 +1,7 @@
+{
+  "name": "mapDemo1Cordova",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

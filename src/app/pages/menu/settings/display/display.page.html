@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar mode="ios" class="lekton" color="blue-purple">
+    <ion-buttons>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Display</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Toggles in a List -->
+  <ion-list>
+    <ion-item>
+      <ion-label>Dark Mode</ion-label>
+      <ion-toggle (click)="changeColour()" id="themeToggle" color="dark"></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

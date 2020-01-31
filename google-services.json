@@ -1,0 +1,122 @@
+{
+  "project_info": {
+    "project_number": "560115770414",
+    "firebase_url": "https://mapsdemoone.firebaseio.com",
+    "project_id": "mapsdemoone",
+    "storage_bucket": "mapsdemoone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560115770414:android:dca4360abb230d068febbf",
+        "android_client_info": {
+          "package_name": "com.example.mapsdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560115770414-ba2h01qtjq5ff5f6dpco2vuae5v1aba8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mapsdemo",
+            "certificate_hash": "f917d2ddfa9fdfb3233a149684a37793e62c2979"
+          }
+        },
+        {
+          "client_id": "560115770414-g48i0bb7bjj2osg3v2ds5v10h69g72cv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPRVK5MYwzVo862URr2HNyR6jUTF6KL2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560115770414-g48i0bb7bjj2osg3v2ds5v10h69g72cv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560115770414:android:bf749d3bec47e9d98febbf",
+        "android_client_info": {
+          "package_name": "com.example.mapsdemoadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560115770414-fs38sji9dio7l35h3vhnha4eh6ffohnh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mapsdemoadmin",
+            "certificate_hash": "f917d2ddfa9fdfb3233a149684a37793e62c2979"
+          }
+        },
+        {
+          "client_id": "560115770414-g48i0bb7bjj2osg3v2ds5v10h69g72cv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPRVK5MYwzVo862URr2HNyR6jUTF6KL2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560115770414-g48i0bb7bjj2osg3v2ds5v10h69g72cv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560115770414:android:5c4507e4895155ad8febbf",
+        "android_client_info": {
+          "package_name": "com.missolova.spiq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560115770414-c1ie4pg8eu4u3p1tgmn0oeot83dl7g9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.missolova.spiq",
+            "certificate_hash": "f917d2ddfa9fdfb3233a149684a37793e62c2979"
+          }
+        },
+        {
+          "client_id": "560115770414-g48i0bb7bjj2osg3v2ds5v10h69g72cv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPRVK5MYwzVo862URr2HNyR6jUTF6KL2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560115770414-g48i0bb7bjj2osg3v2ds5v10h69g72cv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

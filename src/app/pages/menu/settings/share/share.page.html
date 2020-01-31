@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar mode="ios" class="lekton" color="blue-purple">
+    <ion-buttons>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Share</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-icon name="pin" slot="end" color="primary"></ion-icon>
+      <h2 #messageSubject>Invite Your Friends</h2>
+      <img src="https://source.unsplash.com/category/technology/600x390">
+
+    </ion-card-header>
+    <ion-card-content>
+      <p #messageBody>You can share this app with you friends.</p>
+      <ion-grid>
+        <ion-row>
+          <ion-col offset-md="8" offset-md="2">
+            <ion-button (click)="sendShare(messageBody.innerText, 
+              messageSubject.innerText, 'https://ionicframework.com/docs')">
+              <ion-icon slot="icon-only" name="share"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

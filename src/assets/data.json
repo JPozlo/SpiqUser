@@ -1,0 +1,35 @@
+{
+    "message": "Successfully retrieved dummy location list",
+    "data": [
+        {
+            "ID": 250,
+            "Name": "First Location",
+            "Latitude": -1.3893404,
+            "Longitude": 36.7672191
+        },
+        {
+            "ID": 251,
+            "Name": "Second Location",
+            "Latitude": -1.3983404,
+            "Longitude": 36.7682191
+        },
+        {
+            "ID": 252,
+            "Name": "Third Location",
+            "Latitude": -1.3723404,
+            "Longitude": 36.7172191
+        },
+        {
+            "ID": 253,
+            "Name": "Fourth Location",
+            "Latitude": -1.3613404,
+            "Longitude": 36.7142191
+        },
+        {
+            "ID": 254,
+            "Name": "Fifth Location",
+            "Latitude": -1.3813404,
+            "Longitude": 36.7382191
+        }
+    ]
+}

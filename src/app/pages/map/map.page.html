@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar mode="ios" class="lekton" color="blue-purple">
+    <ion-buttons>
+      <ion-menu-button menu="menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Book A Place
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="map-wrapper">
+    <div #map id="map"></div>
+  </div>
+</ion-content>
+<ion-footer>
+  <div class="map-button">
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+        <ion-button color="tertiary" expand="block" fill="outline" (click)="onBook()">
+          Search A Place
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-footer>

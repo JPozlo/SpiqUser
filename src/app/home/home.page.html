@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar class="lekton" color="blue-purple">
+    <ion-buttons>
+      <ion-menu-button menu="menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      SPiQ
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col (click)="moveToMaps()" class="ion-text-center">
+        <ion-button>Go to Maps Page</ion-button>
+      </ion-col>
+      <ion-col *ngIf="!emailIsVerified" (click)="verifyEmail()">
+        <ion-button color="secondary">Send Verification Email</ion-button>
+      </ion-col>
+      <ion-col *ngIf="emailIsVerified">
+        <ion-button>Email is verified click to go forward!</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

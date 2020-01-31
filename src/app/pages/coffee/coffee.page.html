@@ -1,0 +1,44 @@
+<ion-header translucent>
+  <ion-toolbar mode="ios" class="lekton" color="blue-purple">
+    <ion-buttons>
+      <ion-menu-button menu="menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>SPiQ</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-fab vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openCart()" #cart>
+      <div class="cart-length">{{ cartItemCount | async }}</div>
+      <ion-icon name="cart" class="cart-icon"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-card class="domine card-price" color="red-purple">
+    <ion-card-header>
+      <ion-card-content
+        >The total price so far is: {{ totalPrice | currency: 'KSH ' }}
+      </ion-card-content>
+    </ion-card-header>
+    <!-- <ion-content>{{ totalPrice }}</ion-content> -->
+  </ion-card>
+  <ion-card color="blue-green" *ngFor="let c of coffees">
+    <ion-card-header>
+      <ion-card-title class="comfortaa">{{ c.name }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="8">
+          <ion-label color="white" class="righteous">
+            <b>{{ c.price | currency:'KSH ' }}</b>
+          </ion-label>
+        </ion-col>
+        <ion-col size="4" class="ion-text-right">
+          <ion-button color="red" fill="clear" (click)="addToCart(c)">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

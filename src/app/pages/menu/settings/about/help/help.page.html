@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar mode="ios" class="lekton" color="blue-purple">
+    <ion-buttons>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Help</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="align-items-center">
+    <p>If you have a problem or any question to ask, just take a loook at our website or contact us through email.</p>
+  </div>
+  <div>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+      <ion-grid>
+        <ion-row>
+          <ion-col size-md="6" offset-md="3">
+            <ion-item>
+              <ion-textarea name="helpMsg" ngModel required placeholder="Ask us your question..." auto-grow>
+              </ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size-md="6" offset-md="3">
+            <ion-button [disabled]="!f.valid" type="submit" expand="block" color="primary">
+              Send
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </form>
+  </div>
+
+</ion-content>

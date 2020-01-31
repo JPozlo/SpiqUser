@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar mode="ios" class="lekton" color="blue-purple">
+    <ion-buttons>
+      <ion-menu-button menu="menu"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+    <!-- <ion-buttons slot="end" (click)="uploadImage()">
+      <ion-icon slot="icon-only" name="checkmark-circle"></ion-icon>
+    </ion-buttons> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <div *ngIf="!user.photoURL">
+        <!-- <ion-icon slot="start" (click)="updateImage()" name="create"></ion-icon> -->
+        <img src="assets/defaultProfilePic.png" alt="">
+      </div>
+      <div *ngIf="user.photoURL">
+        <!-- <ion-icon slot="start" (click)="updateImage()" name="create"></ion-icon> -->
+        <img [src]="user.photoURL" alt="">
+      </div>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list class="lekton">
+        <ion-item>
+          <!-- <ion-icon slot="start" (click)="updateName()" name="create"></ion-icon> -->
+          <ion-label *ngIf="!user">Username: {{ 'Placeholder username' }}</ion-label>
+          <ion-label *ngIf="user">Username: {{ user.displayName }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <!-- <ion-icon slot="start" (click)="updateEmail()" name="create"></ion-icon> -->
+          <ion-label *ngIf="!user">Email: {{ 'Placeholder email' }}</ion-label>
+          <ion-label *ngIf="user">Email: {{ user.email }}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-icon slot="start" (click)="updatePhone()" name="create"></ion-icon>
+          <ion-label *ngIf="!user">Phone: {{ 'Placeholder phone number' }}</ion-label>
+          <ion-label *ngIf="user">Phone: {{ otherPhoneNo }}</ion-label>
+          <ion-item *ngIf="!otherPhoneNo">
+            <ion-label position="floating" *ngIf="!user.phoneNumber">Enter Phone information</ion-label>
+            <ion-input [(ngModel)]="phoneNo"></ion-input>
+          </ion-item>
+        </ion-item>
+        <ion-item (click)="updatePass()" *ngIf="user">
+          <ion-icon slot="start" name="create"></ion-icon>
+          <ion-label>Update Password?</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+
+    <ion-buttons>
+      <!-- <ion-row *ngIf="!fileUrl">
+        <ion-col size-md="6" offset-md="3">
+          <ion-button color="secondary" (click)="openImagePickerCrop()">Image Picker Crop</ion-button>
+        </ion-col>
+        <ion-col size-md="6" offset-md="3">
+          <ion-button color="secondary" (click)="openImagePicker()">Image Picker</ion-button>
+        </ion-col>
+      </ion-row> -->
+      <ion-row>
+        <!-- <ion-col size-md="6" offset-md="3">
+          <ion-button color="secondary" (click)="uploadImage()">Upload to firebase</ion-button>
+        </ion-col> -->
+        <ion-col size-md="6" offset-md="3">
+          <ion-buttons color="secondary">
+            <label for="uploadBtn">Choose an image</label>
+            <input id="uploadBtn" type="file" class="upload" (change)="uploadFile($event.target.files)" />
+            <!-- <ion-button color="secondary" (click)="selectImageLocation()">Choose Image</ion-button> -->
+          </ion-buttons>
+        </ion-col>
+      </ion-row>
+
+    </ion-buttons>
+  </ion-card>
+
+</ion-content>

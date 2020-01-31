@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Phone Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="8" offset="2" size-md="6" offset-md="3">
+        <ion-input *ngIf="!phoneNoSent" type="text" placeholder="Enter Phone Number" [(ngModel)]="phoneNo"></ion-input>
+        <ion-button *ngIf="!phoneNoSent" (click)="sendOTP()" expand="block" color="secondary">Send OTP</ion-button>
+        <ion-input *ngIf="phoneNoSent" type="text" placeholder="Enter OTP" [(ngModel)]="code"></ion-input>
+        <ion-button *ngIf="phoneNoSent" expand="block" color="secondary" (click)="verify()">Verify</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>
