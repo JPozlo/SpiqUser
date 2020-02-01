@@ -1,8 +1,8 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import * as cors from "cors";
+// import * as cors from "cors";
 
-cors({ origin: true });
+// cors({ origin: true });
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript

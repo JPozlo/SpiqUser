@@ -16,8 +16,8 @@ const routes: Routes = [
     loadChildren: () =>
       import("./pages/auth/register/register.module").then(
         m => m.RegisterPageModule
-      ),
-    canActivate: [LoginGuard]
+      )
+    // canActivate: [LoginGuard]
   },
   {
     path: "settings",

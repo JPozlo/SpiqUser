@@ -1,26 +1,43 @@
-import { BookingService } from './../../services/booking.service';
-import { AlertController, ActionSheetController } from '@ionic/angular';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { Geolocation, GeolocationOptions, Geoposition } from '@ionic-native/geolocation/ngx';
-import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Observable, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { AdminService } from 'src/app/services/admin.service';
+import { BookingService } from "./../../services/booking.service";
+import { AlertController, ActionSheetController } from "@ionic/angular";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy
+} from "@angular/core";
+import {
+  Geolocation,
+  GeolocationOptions,
+  Geoposition
+} from "@ionic-native/geolocation/ngx";
+import {
+  NativeGeocoder,
+  NativeGeocoderResult,
+  NativeGeocoderOptions
+} from "@ionic-native/native-geocoder/ngx";
+import { HttpClient } from "@angular/common/http";
+import { map } from "rxjs/operators";
+import { AngularFireAuth } from "@angular/fire/auth";
+import {
+  AngularFirestore,
+  AngularFirestoreCollection
+} from "@angular/fire/firestore";
+import { Observable, Subscription } from "rxjs";
+import { AuthService } from "src/app/services/auth.service";
+import { FormGroup, FormBuilder } from "@angular/forms";
+import { AdminService } from "src/app/services/admin.service";
 
 declare var google;
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.page.html',
-  styleUrls: ['./map.page.scss'],
+  selector: "app-map",
+  templateUrl: "./map.page.html",
+  styleUrls: ["./map.page.scss"]
 })
 export class MapPage implements OnInit, OnDestroy {
-  @ViewChild('map', { static: false }) mapElement: ElementRef;
+  @ViewChild("map", { static: false }) mapElement: ElementRef;
   map: any;
   marker: any;
   address: string;
@@ -36,17 +53,17 @@ export class MapPage implements OnInit, OnDestroy {
   places: Array<any>;
   filteredPlacesID: Array<any>;
   quietareas: Array<any> = [
-    'ChIJtS505UoULxgR0QkaBPgw5u4',
-    'ChIJszXorvATLxgRcEdpiGxpC0c',
-    'ChIJRwyS5cQFLxgRwZ9Hpl27bHc',
-    'ChIJhU-1PsMFLxgRH8MIe-BFkss',
-    'ChIJLR5-zBEaLxgRgwSwoR30RII'
+    "ChIJtS505UoULxgR0QkaBPgw5u4",
+    "ChIJszXorvATLxgRcEdpiGxpC0c",
+    "ChIJRwyS5cQFLxgRwZ9Hpl27bHc",
+    "ChIJhU-1PsMFLxgRH8MIe-BFkss",
+    "ChIJLR5-zBEaLxgRgwSwoR30RII"
   ]; //place_id
 
   placeIdentifier: string;
   placeName: string;
 
-  private URL = 'assets/data.json';
+  private URL = "assets/data.json";
 
   private lat;
   private long;
@@ -56,8 +73,6 @@ export class MapPage implements OnInit, OnDestroy {
   //others
   options: GeolocationOptions;
   currentPos: Geoposition;
-
-
 
   constructor(
     private geolocation: Geolocation,
@@ -69,17 +84,16 @@ export class MapPage implements OnInit, OnDestroy {
     private actionSheetCtrl: ActionSheetController,
     private adminService: AdminService,
     private bookingService: BookingService
-  ) { }
+  ) {}
 
   ngOnInit() {
     //this.trackUserPosition();
-    this.getUserPosition();
   }
 
-  ngOnDestroy() { }
-  ionViewDidEnter() {
-    console.log('yes');
-    // this.getUserPosition();
+  ngOnDestroy() {}
+  ionViewWillEnter() {
+    this.getUserPosition();
+    console.log("yes");
   }
 
   onBook() {
@@ -91,14 +105,14 @@ export class MapPage implements OnInit, OnDestroy {
       (results: Array<any>) => {
         this.places = results;
         console.log("Places array: ", this.places);
-        this.filteredPlacesID = results.map(function (value, index) {
+        this.filteredPlacesID = results.map(function(value, index) {
           return value.place_id;
         });
         console.log("The filtered places ID are: ", this.filteredPlacesID);
         for (let i = 0; i < results.length; i++) {
           if (this.quietareas.includes(results[i]["place_id"])) {
             this.placeIdentifier = results[i]["id"];
-            this.placeName = results[i]['name'];
+            this.placeName = results[i]["name"];
             this.createMarker(results[i]);
             console.log("Created marker successfully!", results[i]);
           }
@@ -121,9 +135,6 @@ export class MapPage implements OnInit, OnDestroy {
 
     this.addMarker(latLng);
     this.currentPosition = new google.maps.LatLng(lat, long);
-
-
-
   }
 
   addMarker(latlng) {
@@ -133,12 +144,12 @@ export class MapPage implements OnInit, OnDestroy {
       position: latlng
     });
 
-    let content = '<p>This is your current position !</p>';
+    let content = "<p>This is your current position !</p>";
     let infoWindow = new google.maps.InfoWindow({
       content: content
     });
 
-    google.maps.event.addListener(marker, 'click', () => {
+    google.maps.event.addListener(marker, "click", () => {
       infoWindow.open(this.map, marker);
     });
   }
@@ -155,7 +166,7 @@ export class MapPage implements OnInit, OnDestroy {
         this.addMap(pos.coords.latitude, pos.coords.longitude);
       },
       (err: PositionError) => {
-        console.log('error : ' + err.message);
+        console.log("error : " + err.message);
       }
     );
   }
@@ -164,12 +175,12 @@ export class MapPage implements OnInit, OnDestroy {
     var service = new google.maps.places.PlacesService(this.map);
     let request = {
       location: latLng,
-      radius: '8047',
-      types: ['shopping_mall', 'restaurant'],
-      key: 'AIzaSyBkv2XkDpOFVZ1NMaI2pW3p-syAK3D0ZHc'
+      radius: "8047",
+      types: ["shopping_mall", "restaurant"],
+      key: "AIzaSyBkv2XkDpOFVZ1NMaI2pW3p-syAK3D0ZHc"
     };
     return new Promise((resolve, reject) => {
-      service.nearbySearch(request, function (results, status) {
+      service.nearbySearch(request, function(results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           resolve(results);
         } else {
@@ -180,7 +191,7 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   createMarker(place) {
-    const image = '../../../assets/icon/favicon.png';
+    const image = "../../../assets/icon/icon.ico";
 
     let marker = new google.maps.Marker({
       map: this.map,
@@ -189,40 +200,40 @@ export class MapPage implements OnInit, OnDestroy {
       icon: image
     });
 
-    let content = 'The InfoContent';
+    let content = "The InfoContent";
     let infoWindow = new google.maps.InfoWindow({
       content: content
     });
 
-    google.maps.event.addListener(marker, 'click', () => {
+    google.maps.event.addListener(marker, "click", () => {
       this.presentActionSheet();
-
     });
   }
 
   async presentActionSheet() {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Book A Place',
+      header: "Book A Place",
       buttons: [
         {
-          text: 'Book',
-          icon: 'checkmark-circle',
+          text: "Book",
+          icon: "checkmark-circle",
           handler: () => {
-            this.bookingService.createBooking(this.placeIdentifier, this.placeName);
-            console.log('Sent to firebase after click');
+            this.bookingService.createBooking(
+              this.placeIdentifier,
+              this.placeName
+            );
+            console.log("Sent to firebase after click");
           }
         },
         {
-          text: 'Cancel',
-          role: 'cancel',
-          icon: 'close'
+          text: "Cancel",
+          role: "cancel",
+          icon: "close"
         }
       ]
     });
     await actionSheet.present();
   }
-
-
 
   // // Loads map and tracks user location
   // trackUserPosition() {
@@ -246,7 +257,6 @@ export class MapPage implements OnInit, OnDestroy {
   //       this.getMarkers();
   //     }, err => console.log(`Error of tracking location is ${err}`));
   // }
-
 
   // // Loads map and gets current user position
   // loadMap() {
@@ -272,7 +282,7 @@ export class MapPage implements OnInit, OnDestroy {
   //     });
   // }
 
-  // // Function to calculate distance 
+  // // Function to calculate distance
   // calculateDistanceAPI(userloc, placeloc) {
   //   let loc1 = userloc;
   //   let loc2 = placeloc;
@@ -298,7 +308,6 @@ export class MapPage implements OnInit, OnDestroy {
   //   return d;
   // }
 
-
   // onPair() {
   //   this.user = this.afAuth.auth.currentUser;
   //   this.getFilteredMarkers();
@@ -306,7 +315,6 @@ export class MapPage implements OnInit, OnDestroy {
   //   console.log(`The Places List is ${this.places[1]['ID']}`);
 
   // }
-
 
   // // Button clicked when searching for a place
   // onBook() {
@@ -381,7 +389,6 @@ export class MapPage implements OnInit, OnDestroy {
   //   }
   // }
 
-
   // // Add click listener to the markers
   // addClickToMarker(marker) {
   //   marker.addListener('click', () => {
@@ -390,7 +397,6 @@ export class MapPage implements OnInit, OnDestroy {
   //     });
   //   });
   // }
-
 
   // // Function to obtain address from current coordinates
   // getAddressFromCoords(latitude: number, longitude: number) {
@@ -417,5 +423,4 @@ export class MapPage implements OnInit, OnDestroy {
   //       this.address = 'Address not available';
   //     });
   // }
-
 }

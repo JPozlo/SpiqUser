@@ -38,13 +38,28 @@ export class CoffeePage implements OnInit {
     private contacts: Contacts,
     private callNumber: CallNumber,
     private firebaseService: FirebaseService
-  ) {}
+  ) {
+    this.showToast(
+      "Important!",
+      "This service is only available if you have an active session"
+    );
+  }
+
+  showToast(header: string, message: string) {
+    this.toastCtrl
+      .create({
+        header,
+        message,
+        duration: 4000,
+        position: "top"
+      })
+      .then(toastEl => toastEl.present());
+  }
 
   ngOnInit() {
     this.cart = this.coffeeService.getCart();
     this.coffees = this.coffeeService.getCoffees();
     this.cartItemCount = this.coffeeService.getCartItemCount();
-
     this.totalPrice = this.firebaseService.getCoffeeTotalPrice();
     console.log(this.totalPrice);
   }
@@ -64,7 +79,7 @@ export class CoffeePage implements OnInit {
     modal.onDidDismiss().then(data => {
       this.fab.nativeElement.classList.remove("animated", "bounceOutLeft");
       this.animateCSS("bounceInLeft");
-      this.totalPrice = data.data;
+      this.totalPrice += data.data;
     });
     modal.present();
   }

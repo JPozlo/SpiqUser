@@ -45,13 +45,27 @@ export class CartModalPage implements OnInit {
   }
 
   close() {
-    this.modalCtrl.dismiss();
+    this.modalCtrl.dismiss(this.totalPrice);
   }
 
   async checkout() {
     // Perfom PayPal or Stripe checkout process
     this.coffeeService.resetCart();
-    this.firebaseService.updateCoffeeSession(this.totalPrice);
-    this.modalCtrl.dismiss(this.totalPrice);
+    // this.firebaseService.updateCoffeeSession(this.totalPrice);
+    const status = this.firebaseService.updateCoffeeSession(this.totalPrice);
+    if (!status) {
+      this.alertCtrl
+        .create({
+          header: "Sorry",
+          message: `You can't order coffee without an active session`,
+          buttons: ["OK"]
+        })
+        .then(alertEl => {
+          alertEl.present();
+          this.modalCtrl.dismiss(0);
+        });
+    } else {
+      this.modalCtrl.dismiss(this.totalPrice);
+    }
   }
 }

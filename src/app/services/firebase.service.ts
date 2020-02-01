@@ -47,6 +47,8 @@ export class FirebaseService {
   isBook;
   image;
 
+  priceUpdateSuccessful: boolean;
+
   constructor(
     private imgPicker: ImagePicker,
     private sms: SMS,
@@ -109,62 +111,25 @@ export class FirebaseService {
                 { merge: true }
               )
               .then(
-                () => {
-                  const options = {
-                    replaceLineBreaks: false,
-                    android: {
-                      intent: ""
-                    }
-                  };
-                  this.sms.hasPermission().then(
-                    allowed => {
-                      this.sms.send(
-                        "+254731784499",
-                        `Coffee ordered amount: ${coffeePrice}`,
-                        options
-                      );
-                    },
-                    notallowed => {
-                      this.androidPermissions
-                        .requestPermission(
-                          this.androidPermissions.PERMISSION.SEND_SMS
-                        )
-                        .then(
-                          allowed => {
-                            this.sms.send(
-                              "+254731784499",
-                              `Coffee ordered amount: ${coffeePrice}`,
-                              options
-                            );
-                          },
-                          err =>
-                            this.showAlert(
-                              "Hello",
-                              "We need access to your SMS to improve services offered to you."
-                            )
-                        );
-                    }
-                  );
-                  this.showAlert(
-                    "Thanks for your order!",
-                    `Your order wil be brought to you shortly`
-                  );
+                success => {
+                  this.priceUpdateSuccessful = true;
                 },
-                err =>
-                  this.showAlert(
-                    "Sorry!",
-                    `You cannot make an order unless you are in session`
-                  )
+                err => {
+                  this.priceUpdateSuccessful = false;
+                }
               );
           });
         },
         err => {
+          return false;
           this.showAlert(
             "Sorry!",
             `You cannot make an order unless you are in session`
           );
         }
-      );
+      )
+      .catch(err => this.showAlert("Error", `${err}`));
+    return this.priceUpdateSuccessful;
   }
 
   getCoffeeTotalPrice() {

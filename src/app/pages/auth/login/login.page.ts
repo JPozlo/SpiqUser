@@ -82,7 +82,7 @@ export class LoginPage implements OnInit {
   }
 
   loginGoogle() {
-    this.authService.doGoogleLogin();
+    this.authService.loginGoogle();
   }
 
   loginTwitter() {}

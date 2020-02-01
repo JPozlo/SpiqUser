@@ -133,117 +133,118 @@ export class AuthService implements OnDestroy {
     return firebase.auth().currentUser;
   }
 
-  async doGoogleLogin() {
-    const loading = await this.loadingCtrl.create({
-      message: "Please wait..."
-    });
-    this.presentLoading(loading);
-    this.google
-      .login({
-        // scopes: optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
-        webClientId: environment.webClientId, // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
-        offline: true // Optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
-      })
-      .then(
-        user => {
-          //   const googleCredential = firebase.auth.GoogleAuthProvider.credential(
-          //     user.idToken
-          //   );
-          //   firebase
-          //     .auth()
-          //     .signInWithCredential(googleCredential)
-          //     .then(
-          // success => {
-          loading.dismiss();
-          this.nativeStorage
-            .setItem(USER_DETAILS, {
-              name: user.displayName,
-              email: user.email,
-              picture: user.imageUrl
-            })
-            .then(
-              () => {
-                this.router.navigate(["/", "tab"]);
-              },
-              error => {
-                console.log(error);
-              }
-            );
-          //   },
-          //   nonsuccess => this.showAlert("Error signing in", `${nonsuccess}`)
-          // );
-        },
-        err => {
-          console.log(err);
-          loading.dismiss();
-          this.showAlert("Error logging into google", `${err}`);
-        }
-      );
-  }
-  async presentLoading(loading) {
-    return await loading.present();
-  }
-
-  // async loginGoogle() {
-  //   let params;
-  //   if (this.platform.is("android")) {
-  //     params = {
-  //       webClientId: environment.webClientId,
-  //       offline: true
-  //     };
-  //   } else {
-  //     params = {};
-  //   }
-
+  // async doGoogleLogin() {
+  //   const loading = await this.loadingCtrl.create({
+  //     message: "Please wait..."
+  //   });
+  //   this.presentLoading(loading);
   //   this.google
-  //     .login(params)
-  //     .then(res => {
-  //       const { idToken, accessToken } = res;
-  //       if (this.platform.is("android")) {
-  //         this.onGoogleLoginSuccess(idToken, accessToken);
-  //       } else {
-  //         this.onGoogleWebLoginSuccess();
-  //       }
+  //     .login({
+  //       // scopes: optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+  //       webClientId: environment.webClientId, // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+  //       offline: true // Optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
   //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       this.showAlert(
-  //         "Error",
-  //         `Error logging in due to ${JSON.stringify(err)}`
-  //       );
-  //     });
-  // }
-
-  // onGoogleLoginSuccess(accessToken, accessSecret) {
-  //   const credential = accessSecret
-  //     ? firebase.auth.GoogleAuthProvider.credential(accessToken, accessSecret)
-  //     : firebase.auth.GoogleAuthProvider.credential(accessToken);
-  //   this.afAuth.auth.signInWithCredential(credential).then(
-  //     response => {
-  //       this.showAlert("Success", `Successfully logged in by google`);
-  //       this.router.navigateByUrl("/tab");
-  //     },
-  //     err => {
-  //       this.showAlert(
-  //         "Error",
-  //         `Error logging in google account due to: ${err}`
-  //       );
-  //     }
-  //   );
-  // }
-
-  // async onGoogleWebLoginSuccess() {
-  //   try {
-  //     const provider = new firebase.auth.GoogleAuthProvider();
-  //     const credential = await this.afAuth.auth.signInWithPopup(provider);
-  //     this.router.navigateByUrl("/tab");
-  //   } catch (err) {
-  //     this.showAlert(
-  //       "Error",
-  //       `Cannot succeed web google sign in due to: ${err}`
+  //     .then(
+  //       user => {
+  //         this.router.navigateByUrl("/tab");
+  //         //   const googleCredential = firebase.auth.GoogleAuthProvider.credential(
+  //         //     user.idToken
+  //         //   );
+  //         //   firebase
+  //         //     .auth()
+  //         //     .signInWithCredential(googleCredential)
+  //         //     .then(
+  //         // success => {
+  //         loading.dismiss();
+  //         // this.nativeStorage
+  //         //   .setItem(USER_DETAILS, {
+  //         //     name: user.displayName,
+  //         //     email: user.email,
+  //         //     picture: user.imageUrl
+  //         //   })
+  //         //   .then(
+  //         //     () => {
+  //         //       this.router.navigate(["/", "tab"]);
+  //         //     },
+  //         //     error => {
+  //         //       console.log(error);
+  //         //     }
+  //         //   );
+  //         //   },
+  //         //   nonsuccess => this.showAlert("Error signing in", `${nonsuccess}`)
+  //         // );
+  //       },
+  //       err => {
+  //         console.log(err);
+  //         loading.dismiss();
+  //         this.showAlert("Error logging into google", `${err}`);
+  //       }
   //     );
-  //   }
   // }
+  // async presentLoading(loading) {
+  //   return await loading.present();
+  // }
+
+  async loginGoogle() {
+    let params;
+    if (this.platform.is("android")) {
+      params = {
+        webClientId: environment.webClientId,
+        offline: true
+      };
+    } else {
+      params = {};
+    }
+
+    this.google
+      .login(params)
+      .then(res => {
+        const { idToken, accessToken } = res;
+        if (this.platform.is("android")) {
+          this.onGoogleLoginSuccess(idToken, accessToken);
+        } else {
+          this.onGoogleWebLoginSuccess();
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.showAlert(
+          "Error",
+          `Error logging in due to ${JSON.stringify(err)}`
+        );
+      });
+  }
+
+  onGoogleLoginSuccess(accessToken, accessSecret) {
+    const credential = accessSecret
+      ? firebase.auth.GoogleAuthProvider.credential(accessToken, accessSecret)
+      : firebase.auth.GoogleAuthProvider.credential(accessToken);
+    this.afAuth.auth.signInWithCredential(credential).then(
+      response => {
+        this.showAlert("Success", `Successfully logged in by google`);
+        this.router.navigateByUrl("/tab");
+      },
+      err => {
+        this.showAlert(
+          "Error",
+          `Error logging in google account due to: ${err}`
+        );
+      }
+    );
+  }
+
+  async onGoogleWebLoginSuccess() {
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const credential = await this.afAuth.auth.signInWithPopup(provider);
+      this.router.navigateByUrl("/tab");
+    } catch (err) {
+      this.showAlert(
+        "Error",
+        `Cannot succeed web google sign in due to: ${err}`
+      );
+    }
+  }
 
   private showAlert(header: string, message: string) {
     this.alertCtrl

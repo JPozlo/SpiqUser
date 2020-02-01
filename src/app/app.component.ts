@@ -1,3 +1,5 @@
+import { Network } from "@ionic-native/network/ngx";
+import { NetworkService } from "./services/network.service";
 import { USER_DETAILS } from "./services/auth.service";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
 import { AngularFireAuth } from "@angular/fire/auth";
@@ -37,13 +39,54 @@ export class AppComponent implements OnInit, OnDestroy {
     private fcmService: FcmService,
     private toastCtrl: ToastController,
     private menuCtrl: MenuController,
-    private actionSheetCtrl: ActionSheetController
+    private networkService: NetworkService,
+    private actionSheetCtrl: ActionSheetController,
+    private network: Network
   ) {
     this.initializeApp();
+    // this.nativeStorage.getItem(USER_DETAILS).then(user => {
+    //   if (user) {
+    //     this.router.navigateByUrl("/tab");
+    //   } else {
+    //     this.router.navigateByUrl("/login");
+    //   }
+    // });
+
+    this.networkService.connected().subscribe(
+      res => {
+        this.showToast("Connected", `${this.network.type}`);
+      },
+      err => this.showToast("Error", `${err}`)
+    );
+
+    this.networkService.disconnected().subscribe(
+      res => {
+        this.showToast("No Internet!", "Connect to wifi or mobile network.");
+      },
+      err => this.showToast("Error", `${err}`)
+    );
+
+    this.afAuth.auth.onAuthStateChanged(user => {
+      if (user) {
+        this.navigate(["/", "tab", "tabs", "map"]);
+        // this.router.navigateByUrl('/tab');
+      } else {
+        this.navigate(["/", "login"]);
+        // this.router.navigateByUrl('/login');
+      }
+    });
   }
 
   ngOnInit() {
     this.menuCtrl.enable(true, "menu");
+  }
+
+  showToast(header, message) {
+    this.toastCtrl
+      .create({ header, message, duration: 4000, position: "bottom" })
+      .then(toastEl => {
+        toastEl.present();
+      });
   }
 
   automaticDetection() {
@@ -110,27 +153,7 @@ export class AppComponent implements OnInit, OnDestroy {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.nativeStorage.getItem(USER_DETAILS).then(user => {
-        if (user) {
-          this.router.navigateByUrl("/tab");
-          this.splashScreen.hide();
-        } else {
-          this.router.navigateByUrl("/login");
-          this.splashScreen.hide();
-        }
-      });
-
-      this.afAuth.auth.onAuthStateChanged(user => {
-        if (user) {
-          this.navigate(["/", "tab", "tabs", "map"]);
-          this.splashScreen.hide();
-          // this.router.navigateByUrl('/tab');
-        } else {
-          this.navigate(["/", "login"]);
-          this.splashScreen.hide();
-          // this.router.navigateByUrl('/login');
-        }
-      });
+      this.splashScreen.hide();
       timer(3500).subscribe(() => (this.showSplash = false));
       this.automaticDetection();
       this.notificationSetup();
