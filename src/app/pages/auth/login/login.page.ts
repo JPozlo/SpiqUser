@@ -82,7 +82,13 @@ export class LoginPage implements OnInit {
   }
 
   loginGoogle() {
-    this.authService.loginGoogle();
+    this.authService.myGoogleSignin().then(
+      success => {
+        this.showAlert(`${success.user}`);
+        this.router.navigateByUrl("/tab");
+      },
+      err => this.showAlert(`Error: ${err}`)
+    );
   }
 
   loginTwitter() {}

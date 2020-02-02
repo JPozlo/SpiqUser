@@ -46,6 +46,7 @@ export class AuthService implements OnDestroy {
   private userCollection: AngularFirestoreCollection;
   // private userToken;
   stateValue: boolean;
+  isLoggedIn: boolean;
 
   constructor(
     private http: HttpClient,
@@ -62,6 +63,11 @@ export class AuthService implements OnDestroy {
     private afStore: AngularFirestore
   ) {
     this.userCollection = this.afStore.collection("users");
+    this.afAuth.authState.pipe(first()).subscribe(v => {
+      if (v) {
+        this.isLoggedIn = true;
+      }
+    });
   }
 
   private user: firebase.User;
@@ -69,8 +75,8 @@ export class AuthService implements OnDestroy {
 
   ngOnDestroy() {}
 
-  isLoggedIn() {
-    // Pipe first value emitted and convert to promise
+  // Pipe first value emitted and convert to promise
+  isUserLoggedIn() {
     return this.afAuth.authState.pipe(first()).toPromise();
   }
 
@@ -78,6 +84,48 @@ export class AuthService implements OnDestroy {
     const emailVerifyState = this.afAuth.auth.currentUser.emailVerified;
     return emailVerifyState;
   }
+
+  // googleSignIn(){
+  //   this.google.login()
+  // }
+
+  async myGoogleSignin() {
+    try {
+      const gplusUser = await this.google.login({
+        webClientId: environment.webClientId,
+        offline: true,
+        scopes: "profile email"
+      });
+
+      return await this.afAuth.auth.signInWithCredential(
+        firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // myGoogleSignin() {
+  //   const provider = new firebase.auth.GoogleAuthProvider();
+  //   firebase
+  //     .auth()
+  //     .signInWithRedirect(provider)
+  //     .then(result => {
+  //       firebase
+  //         .auth()
+  //         .getRedirectResult()
+  //         .then(thisresult => {
+  //           const credential = thisresult.credential;
+  //           const user = thisresult.user;
+  //           this.router.navigateByUrl("/tab");
+  //         })
+  //         .catch(err => this.showAlert(`Error`, `${err}`));
+  //     })
+  //     .catch(error => {
+  //       // Handle errors here
+  //       this.showAlert("Error", `${error}`);
+  //     });
+  // }
 
   getUserIsAuthenticated() {
     firebase.auth().onAuthStateChanged(user => {
@@ -200,11 +248,8 @@ export class AuthService implements OnDestroy {
       .login(params)
       .then(res => {
         const { idToken, accessToken } = res;
-        if (this.platform.is("android")) {
-          this.onGoogleLoginSuccess(idToken, accessToken);
-        } else {
-          this.onGoogleWebLoginSuccess();
-        }
+        this.router.navigateByUrl("/tab");
+        this.onGoogleLoginSuccess(idToken, accessToken);
       })
       .catch(err => {
         console.log(err);

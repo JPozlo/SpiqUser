@@ -1,5 +1,3 @@
-import { PhoneconfirmPageModule } from "./pages/phoneconfirm/phoneconfirm.module";
-import { PhoneauthPageModule } from "./pages/phoneauth/phoneauth.module";
 import { environment } from "./../environments/environment";
 import { CartModalPageModule } from "./pages/coffee/cart-modal/cart-modal.module";
 import { WebView } from "@ionic-native/ionic-webview/ngx";
@@ -11,6 +9,7 @@ import { AdminService } from "src/app/services/admin.service";
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouteReuseStrategy } from "@angular/router";
+import { PlaceslistmodalPageModule } from "./pages/placeslistmodal/placeslistmodal.module";
 
 import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
@@ -68,7 +67,7 @@ import { BookingService } from "./services/booking.service";
     AngularFireAuthModule,
     AngularFireStorageModule,
     CartModalPageModule,
-    PhoneconfirmPageModule
+    PlaceslistmodalPageModule
   ],
   providers: [
     StatusBar,

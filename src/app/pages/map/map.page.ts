@@ -1,5 +1,10 @@
+import { PlaceslistmodalPage } from "./../placeslistmodal/placeslistmodal.page";
 import { BookingService } from "./../../services/booking.service";
-import { AlertController, ActionSheetController } from "@ionic/angular";
+import {
+  AlertController,
+  ActionSheetController,
+  ModalController
+} from "@ionic/angular";
 import {
   Component,
   OnInit,
@@ -57,7 +62,10 @@ export class MapPage implements OnInit, OnDestroy {
     "ChIJszXorvATLxgRcEdpiGxpC0c",
     "ChIJRwyS5cQFLxgRwZ9Hpl27bHc",
     "ChIJhU-1PsMFLxgRH8MIe-BFkss",
-    "ChIJLR5-zBEaLxgRgwSwoR30RII"
+    "ChIJLR5-zBEaLxgRgwSwoR30RII",
+    "ChIJYWiy8bYWLxgRlMmbprKj0ms",
+    "ChIJg-zl1IUULxgRKXSci3hn8UQ",
+    "ChIJI5xZhDoRLxgRJEVADPWnciw"
   ]; //place_id
 
   placeIdentifier: string;
@@ -73,6 +81,7 @@ export class MapPage implements OnInit, OnDestroy {
   //others
   options: GeolocationOptions;
   currentPos: Geoposition;
+  place: any;
 
   constructor(
     private geolocation: Geolocation,
@@ -83,7 +92,8 @@ export class MapPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private actionSheetCtrl: ActionSheetController,
     private adminService: AdminService,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private modalCtrl: ModalController
   ) {}
 
   ngOnInit() {
@@ -109,17 +119,31 @@ export class MapPage implements OnInit, OnDestroy {
           return value.place_id;
         });
         console.log("The filtered places ID are: ", this.filteredPlacesID);
-        for (let i = 0; i < results.length; i++) {
-          if (this.quietareas.includes(results[i]["place_id"])) {
-            this.placeIdentifier = results[i]["id"];
-            this.placeName = results[i]["name"];
-            this.createMarker(results[i]);
-            console.log("Created marker successfully!", results[i]);
-          }
-        }
+        // for (let i = 0; i < results.length; i++) {
+        //   if (this.quietareas.includes(results[i]["place_id"])) {
+        //     this.placeIdentifier = results[i]["id"];
+        //     this.placeName = results[i]["name"];
+        //     this.place = results[i];
+        //     this.openPlacesList(this.place);
+        //     this.createMarker(results[i]);
+        //     console.log("Created marker successfully!", results[i]);
+        //   }
+        // }
+        this.openPlacesList(this.places);
       },
       status => console.log(status)
     );
+  }
+
+  async openPlacesList(places) {
+    const modal = await this.modalCtrl.create({
+      component: PlaceslistmodalPage,
+      componentProps: { places }
+    });
+    // modal.onDidDismiss().then(data => {
+
+    // });
+    modal.present();
   }
 
   addMap(lat, long) {

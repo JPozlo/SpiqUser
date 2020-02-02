@@ -121,7 +121,7 @@ export class FirebaseService {
           });
         },
         err => {
-          return false;
+          this.priceUpdateSuccessful = false;
           this.showAlert(
             "Sorry!",
             `You cannot make an order unless you are in session`

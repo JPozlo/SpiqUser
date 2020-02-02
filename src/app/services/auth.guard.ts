@@ -23,11 +23,8 @@ export class AuthGuard {
     private router: Router
   ) {}
 
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.authService.isLoggedIn()) {
+  canLoad(route: Route, segments: UrlSegment[]): Promise<boolean> | boolean {
+    if (this.authService.isUserLoggedIn()) {
       return true;
     } else {
       return false;

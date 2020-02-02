@@ -90,7 +90,7 @@ export class RegisterPage implements OnInit {
   }
 
   loginGoogle() {
-    this.authService.loginGoogle();
+    this.authService.myGoogleSignin();
   }
 
   loginTwitter() {}

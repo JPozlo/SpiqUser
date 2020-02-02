@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Nearby Places</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div>
+    <ion-list>
+      <ion-item *ngFor="let place of thePlacesList">
+        <ion-label>{{ place.name }}</ion-label>
+        <ion-button (click)="book(place.id, place.name)">Book</ion-button>
+      </ion-item>
+      <ion-item>
+        <ion-button (click)="closeModal()">Cancel</ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

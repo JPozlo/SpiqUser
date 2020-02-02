@@ -8,8 +8,8 @@ const routes: Routes = [
   {
     path: "login",
     loadChildren: () =>
-      import("./pages/auth/login/login.module").then(m => m.LoginPageModule),
-    canActivate: [LoginGuard]
+      import("./pages/auth/login/login.module").then(m => m.LoginPageModule)
+    // canActivate: [LoginGuard]
   },
   {
     path: "register",
@@ -78,6 +78,10 @@ const routes: Routes = [
     path: "test",
     loadChildren: () =>
       import("./pages/test/test.module").then(m => m.TestPageModule)
+  },
+  {
+    path: 'placeslistmodal',
+    loadChildren: () => import('./pages/placeslistmodal/placeslistmodal.module').then( m => m.PlaceslistmodalPageModule)
   }
 ];
 

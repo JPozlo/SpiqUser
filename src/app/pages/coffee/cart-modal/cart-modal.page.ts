@@ -65,6 +65,16 @@ export class CartModalPage implements OnInit {
           this.modalCtrl.dismiss(0);
         });
     } else {
+      this.alertCtrl
+        .create({
+          header: "Confirmed",
+          message: `Your order will be brought to you shortly`,
+          buttons: ["OK"]
+        })
+        .then(alertEl => {
+          alertEl.present();
+          this.modalCtrl.dismiss(0);
+        });
       this.modalCtrl.dismiss(this.totalPrice);
     }
   }
