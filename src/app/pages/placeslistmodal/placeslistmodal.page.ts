@@ -20,7 +20,9 @@ export class PlaceslistmodalPage implements OnInit {
     "ChIJLR5-zBEaLxgRgwSwoR30RII",
     "ChIJYWiy8bYWLxgRlMmbprKj0ms",
     "ChIJg-zl1IUULxgRKXSci3hn8UQ",
-    "ChIJI5xZhDoRLxgRJEVADPWnciw"
+    "ChIJI5xZhDoRLxgRJEVADPWnciw",
+    "ChIJC4gm9aEQLxgRrKHdf2wTiGg", // Adlife
+    "ChIJCz3xipsQLxgRHZdNqnea670" // Prestige
   ]; //place_id
 
   // @Input() places;
@@ -29,6 +31,7 @@ export class PlaceslistmodalPage implements OnInit {
   filteredPlaceName: string;
   filteredPlacesList = [];
   thePlacesList = [];
+  myplaceList = [];
 
   constructor(
     private modalCtrl: ModalController,
@@ -36,8 +39,8 @@ export class PlaceslistmodalPage implements OnInit {
     private actionSheetCtrl: ActionSheetController,
     private bookingService: BookingService
   ) {
-    console.log(this.placesList);
     this.placesList = this.navParams.get("places");
+    console.log(this.placesList);
     this.thePlacesList = this.filterPlaces();
   }
 
@@ -59,7 +62,7 @@ export class PlaceslistmodalPage implements OnInit {
     this.presentActionSheet(placeID, placeName);
   }
 
-  closeModal(){
+  closeModal() {
     this.modalCtrl.dismiss();
   }
 
@@ -71,10 +74,12 @@ export class PlaceslistmodalPage implements OnInit {
           text: "Book",
           icon: "checkmark-circle",
           handler: () => {
-            this.bookingService.createBooking(placeId, placeName).then(success => {
-              console.log("Sent to firebase after click");
-              this.modalCtrl.dismiss();
-            });
+            this.bookingService
+              .createBooking(placeId, placeName)
+              .then(success => {
+                console.log("Sent to firebase after click");
+                this.modalCtrl.dismiss();
+              });
           }
         },
         {

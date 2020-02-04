@@ -3,7 +3,8 @@ import { BookingService } from "./../../services/booking.service";
 import {
   AlertController,
   ActionSheetController,
-  ModalController
+  ModalController,
+  LoadingController
 } from "@ionic/angular";
 import {
   Component,
@@ -92,6 +93,7 @@ export class MapPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private actionSheetCtrl: ActionSheetController,
     private adminService: AdminService,
+    private loadingCtrl: LoadingController,
     private bookingService: BookingService,
     private modalCtrl: ModalController
   ) {}
@@ -199,8 +201,8 @@ export class MapPage implements OnInit, OnDestroy {
     var service = new google.maps.places.PlacesService(this.map);
     let request = {
       location: latLng,
-      radius: "8047",
-      types: ["shopping_mall", "restaurant"],
+      radius: "4047",
+      types: ["shopping_mall"],
       key: "AIzaSyBkv2XkDpOFVZ1NMaI2pW3p-syAK3D0ZHc"
     };
     return new Promise((resolve, reject) => {

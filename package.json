@@ -42,6 +42,7 @@
     "@ionic-native/native-geocoder": "^5.17.1",
     "@ionic-native/native-storage": "^5.20.0",
     "@ionic-native/network": "^5.20.0",
+    "@ionic-native/onesignal": "^5.20.0",
     "@ionic-native/open-native-settings": "^5.19.1",
     "@ionic-native/sms": "^5.19.1",
     "@ionic-native/social-sharing": "^5.19.1",
@@ -91,6 +92,7 @@
     "firebase-admin": "^8.9.0",
     "mx.ferreyra.callnumber": "0.0.2",
     "node-sass": "^4.13.1",
+    "onesignal-cordova-plugin": "^2.8.3",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",
     "uuid": "^3.4.0",
@@ -198,7 +200,8 @@
       },
       "call-number": {},
       "cordova-plugin-sms-receive": {},
-      "cordova-plugin-network-information": {}
+      "cordova-plugin-network-information": {},
+      "onesignal-cordova-plugin": {}
     },
     "platforms": [
       "android",

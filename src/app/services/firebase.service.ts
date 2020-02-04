@@ -21,6 +21,7 @@ import * as firebase from "firebase/app";
 import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { User } from "./user.service";
+// import { FieldValue } from "@google-cloud/firestore";
 
 export interface Session {
   id: string;
@@ -46,6 +47,8 @@ export class FirebaseService {
   isActive;
   isBook;
   image;
+
+  userSessionData;
 
   priceUpdateSuccessful: boolean;
 
@@ -90,6 +93,51 @@ export class FirebaseService {
   //   const userStatus = this.isUserActive;
   //   return userStatus;
   // }
+
+  getUserSessions() {
+    const db = firebase.firestore();
+    const user = this.authService.getUser();
+    const userID = user.uid;
+    const query = db.collection('sessions').where('id', '==', userID).where('isActive', '==', false);
+    query.onSnapshot(snap => {
+      snap.forEach(doc => {
+      })
+    })
+  }
+
+  updateBookingCoffeeValues(coffee) {
+    const db = firebase.firestore();
+    const user = this.authService.getUser();
+    const userID = user.uid;
+    db.collection("bookings")
+      .where("sessionStatus", "==", true)
+      .where("userBookingID", "==", userID)
+      .get()
+      .then(snap => {
+        snap.forEach(doc => {
+          const docRef = db.collection("bookings").doc(doc.id);
+          const beforecoffee = doc.data().coffee;
+          // const newcoffee = beforecoffee.concat(...coffee);
+          docRef
+            .set(
+              {
+                coffee: firebase.firestore.FieldValue.arrayUnion(...coffee)
+              },
+              { merge: true }
+            )
+            .then(merged => {
+              this.showAlert(
+                "Success",
+                "Updated user coffee cart successfully"
+              );
+            })
+            .catch(err =>
+              this.showAlert("Error", `Error updating coffee cart: ${err}`)
+            );
+        });
+      })
+      .catch(err => this.showAlert("Error", `${err}`));
+  }
 
   updateCoffeeSession(coffeePrice) {
     const db = firebase.firestore();

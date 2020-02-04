@@ -64,7 +64,7 @@ export class CartModalPage implements OnInit {
           alertEl.present();
           this.modalCtrl.dismiss(0);
         });
-    } else {
+    } else if (status) {
       this.alertCtrl
         .create({
           header: "Confirmed",
@@ -73,9 +73,9 @@ export class CartModalPage implements OnInit {
         })
         .then(alertEl => {
           alertEl.present();
-          this.modalCtrl.dismiss(0);
+          this.firebaseService.updateBookingCoffeeValues(this.cart);
+          this.modalCtrl.dismiss(this.totalPrice);
         });
-      this.modalCtrl.dismiss(this.totalPrice);
     }
   }
 }

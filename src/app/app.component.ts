@@ -1,3 +1,4 @@
+import { OneSignal } from "@ionic-native/onesignal/ngx";
 import { Network } from "@ionic-native/network/ngx";
 import { NetworkService } from "./services/network.service";
 import { USER_DETAILS } from "./services/auth.service";
@@ -13,7 +14,8 @@ import {
   Platform,
   ToastController,
   MenuController,
-  ActionSheetController
+  ActionSheetController,
+  AlertController
 } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
@@ -41,7 +43,9 @@ export class AppComponent implements OnInit, OnDestroy {
     private menuCtrl: MenuController,
     private networkService: NetworkService,
     private actionSheetCtrl: ActionSheetController,
-    private network: Network
+    private network: Network,
+    private oneSignal: OneSignal,
+    private alertCtrl: AlertController
   ) {
     this.initializeApp();
     // this.nativeStorage.getItem(USER_DETAILS).then(user => {
@@ -150,6 +154,52 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
+  setupPush() {
+    this.oneSignal.startInit(
+      "601f5c59-3ed2-40e5-9166-b7bfcbeac728",
+      "560115770414"
+    );
+    this.oneSignal.inFocusDisplaying(
+      this.oneSignal.OSInFocusDisplayOption.InAppAlert
+    );
+    this.oneSignal.handleNotificationOpened().subscribe(result => {
+      const additionalData = result.notification.payload.additionalData;
+      this.showAlert(
+        "Notitfication opened!",
+        "You have opened the notification",
+        additionalData.task
+      );
+    });
+    this.oneSignal.handleNotificationReceived().subscribe(data => {
+      const msg = data.payload.body;
+      const title = data.payload.title;
+      const additionalData = data.payload.additionalData;
+      this.showAlert(title, msg, additionalData.task);
+    });
+    this.oneSignal.endInit();
+  }
+
+  showAlert(title, message, task) {
+    this.alertCtrl
+      .create({
+        header: title,
+        message,
+        buttons: [
+          {
+            text: `Action: ${task}`,
+            handler: () => {
+              // Eg Navigate to a specific screen
+            }
+          },
+          {
+            text: "Cancel",
+            role: "cancel"
+          }
+        ]
+      })
+      .then(alertEl => alertEl.present());
+  }
+
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
@@ -157,6 +207,9 @@ export class AppComponent implements OnInit, OnDestroy {
       timer(3500).subscribe(() => (this.showSplash = false));
       this.automaticDetection();
       this.notificationSetup();
+      if (this.platform.is("cordova" || "android")) {
+        this.setupPush();
+      }
     });
   }
 }

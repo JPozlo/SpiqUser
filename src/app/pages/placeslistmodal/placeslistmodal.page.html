@@ -7,7 +7,7 @@
 <ion-content>
   <div>
     <ion-list>
-      <ion-item *ngFor="let place of thePlacesList">
+      <ion-item *ngFor="let place of placesList">
         <ion-label>{{ place.name }}</ion-label>
         <ion-button (click)="book(place.id, place.name)">Book</ion-button>
       </ion-item>

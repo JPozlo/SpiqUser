@@ -82,6 +82,10 @@ const routes: Routes = [
   {
     path: 'placeslistmodal',
     loadChildren: () => import('./pages/placeslistmodal/placeslistmodal.module').then( m => m.PlaceslistmodalPageModule)
+  },
+  {
+    path: 'session-history',
+    loadChildren: () => import('./pages/session-history/session-history.module').then( m => m.SessionHistoryPageModule)
   }
 ];
 
