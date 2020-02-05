@@ -1,15 +1,41 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
     <ion-title>Your History</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- <ion-list>
-    <ion-item *ngFor="let item of history">
-      <ion-label>{{ item.timestampStart }}</ion-label>
-      <span>to</span>
-      <ion-label>{{ item.timestampEnd }}</ion-label>
-    </ion-item>
-  </ion-list> -->
+  <ion-list>
+    <ion-grid>
+      <ion-item *ngFor="let item of history">
+        <ion-row>
+          <ion-col size="10" offset="1">
+            <ion-label
+              >{{ item.timestampStart.seconds * 1000 | date:'yyyy/MM/dd HH:mm'
+              }}</ion-label
+            >
+          </ion-col>
+          <ion-col size="8" offset="2">
+            <span>to</span>
+          </ion-col>
+          <ion-col size="10" offset="1">
+            <ion-label
+              >{{ item.timestampEnd.seconds * 1000 | date:'yyyy/MM/dd HH:mm'
+              }}</ion-label
+            >
+          </ion-col>
+          <ion-col size="12">
+            <ion-label>
+              The total price of coffee ordered: {{ item.coffeeTotalOrderPrice |
+              currency: 'KSH ' }}
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <hr />
+      </ion-item>
+    </ion-grid>
+  </ion-list>
 </ion-content>

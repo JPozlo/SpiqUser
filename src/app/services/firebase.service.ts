@@ -19,7 +19,7 @@ import {
 
 import * as firebase from "firebase/app";
 import { map } from "rxjs/operators";
-import { Observable } from "rxjs";
+import { Observable, pipe } from "rxjs";
 import { User } from "./user.service";
 // import { FieldValue } from "@google-cloud/firestore";
 
@@ -39,6 +39,7 @@ export class FirebaseService {
   sessionCollection: AngularFirestoreCollection;
   sessions: Observable<Session[]>;
   session;
+  mySessions;
   coffeePrice = 0;
   isUserActive: boolean;
   user;
@@ -94,15 +95,32 @@ export class FirebaseService {
   //   return userStatus;
   // }
 
+  // checkUserSession(){
+  //   const db = firebase.firestore();
+  //   const user = this.authService.getUser();
+  //   const userID = user.uid;
+  //   const query
+  // }
+
   getUserSessions() {
     const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
-    const query = db.collection('sessions').where('id', '==', userID).where('isActive', '==', false);
-    query.onSnapshot(snap => {
-      snap.forEach(doc => {
-      })
-    })
+    let myarray = [];
+    const query = db
+      .collection("sessions")
+      .where("id", "==", userID)
+      .where("isActive", "==", false)
+      .onSnapshot(snap => {
+        snap.forEach(doc => {
+          this.session = doc.data();
+          console.log("Sessions", this.session);
+          this.mySessions = myarray.push(this.session);
+          console.log("MySessions", myarray);
+          this.mySessions += this.session;
+        });
+      });
+    return myarray;
   }
 
   updateBookingCoffeeValues(coffee) {
@@ -187,8 +205,7 @@ export class FirebaseService {
     db.collection("sessions")
       .where("isActive", "==", true)
       .where("id", "==", userID)
-      .get()
-      .then(
+      .onSnapshot(
         snap => {
           snap.forEach(doc => {
             this.coffeePrice = doc.data().coffeeTotalOrderPrice;
@@ -196,6 +213,7 @@ export class FirebaseService {
               "Success!",
               `Retrieved total coffee price: ${this.coffeePrice} from firestore`
             );
+            return this.coffeePrice;
           });
         },
         err => {

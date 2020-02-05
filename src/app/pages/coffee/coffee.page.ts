@@ -43,6 +43,8 @@ export class CoffeePage implements OnInit {
       "Important!",
       "This service is only available if you have an active session"
     );
+    // this.totalPrice = this.firebaseService.getCoffeeTotalPrice();
+    this.totalPrice = this.firebaseService.getCoffeeTotalPrice();
   }
 
   showToast(header: string, message: string) {
@@ -60,7 +62,6 @@ export class CoffeePage implements OnInit {
     this.cart = this.coffeeService.getCart();
     this.coffees = this.coffeeService.getCoffees();
     this.cartItemCount = this.coffeeService.getCartItemCount();
-    this.totalPrice = this.firebaseService.getCoffeeTotalPrice();
     console.log(this.totalPrice);
   }
 
@@ -79,7 +80,7 @@ export class CoffeePage implements OnInit {
     modal.onDidDismiss().then(data => {
       this.fab.nativeElement.classList.remove("animated", "bounceOutLeft");
       this.animateCSS("bounceInLeft");
-      this.totalPrice += data.data;
+      // this.totalPrice += data.data;
     });
     modal.present();
   }

@@ -8,10 +8,11 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./session-history.page.scss"]
 })
 export class SessionHistoryPage implements OnInit {
-  history: Observable<Session[]>;
+  history;
 
   constructor(private firebaseService: FirebaseService) {
-    // this.history = firebaseService.getUserSessions();
+    this.history = firebaseService.getUserSessions();
+    console.log(this.history);
   }
 
   ngOnInit() {}
