@@ -23,31 +23,39 @@ export const sendBooking = functions.https.onRequest((req, res) => {
   console.log("Data/ msg is", msg);
 });
 
-// export const sendBook = functions.firestore.document("/sessions/{sessionId}")
-//     .onCreate((change, context) => {
+export const sessionStarted = functions.firestore
+  .document("/sessions/{sessionId}")
+  .onCreate((change, context) => {
+    const sessionId = context.params.sessionId;
+    const newValue = change.data();
+    const uid = context.auth?.uid!;
+    admin
+      .auth()
+      .getUser(uid)
+      .then(
+        () => {
+          console.log("Success getting id");
+        },
+        () => console.log("Failure getting the uid")
+      );
 
-//         const sessionId = context.params.sessionId;
-//         const newValue = change.data();
+    const sessionPlaceId = newValue?.session_place_id;
+    const sessionUserEmail = newValue?.session_user_email;
 
-//         const sessionPlaceId = newValue?.session_place_id;
-//         const sessionUserEmail = newValue?.session_user_email;
-
-//         const devicesCollection = admin.firestore().collection('devices');
-//         const regToken = devicesCollection.onSnapshot(querySnap => {
-//             querySnap.forEach((doc) => {
-//                 const token = doc.data().token;
-//                 const payload = {
-//                     notification: {
-//                         title: `Booked by ${sessionUserEmail}!!`,
-//                         body: `You have successfully booked a place with ID of ${sessionPlaceId}!`
-//                     }
-//                 }
-//                 return admin.messaging().sendToDevice(token, payload);
-//             })
-
-//         })
-//         console.log('Session to send information', sessionId);
-//         console.log('Regtoken is ', regToken);
-//         return regToken;
-
-//     })
+    const devicesCollection = admin.firestore().collection("devices");
+    const regToken = devicesCollection.onSnapshot(querySnap => {
+      querySnap.forEach(doc => {
+        const token = doc.data().token;
+        const payload = {
+          notification: {
+            title: `Booked by ${sessionUserEmail}!!`,
+            body: `You have successfully booked a place with ID of ${sessionPlaceId}!`
+          }
+        };
+        return admin.messaging().sendToDevice(token, payload);
+      });
+    });
+    console.log("Session to send information", sessionId);
+    console.log("Regtoken is ", regToken);
+    return regToken;
+  });

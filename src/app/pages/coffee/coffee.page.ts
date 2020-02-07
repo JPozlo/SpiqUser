@@ -1,13 +1,11 @@
 import { NgForm } from "@angular/forms";
 import { FirebaseService } from "src/app/services/firebase.service";
-import { CallNumber } from "@ionic-native/call-number/ngx";
 import {
   Contacts,
   Contact,
   ContactName,
   ContactField
 } from "@ionic-native/contacts/ngx";
-import { SMS } from "@ionic-native/sms/ngx";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { CoffeeService } from "./../../services/coffee.service";
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
@@ -34,9 +32,7 @@ export class CoffeePage implements OnInit {
     private coffeeService: CoffeeService,
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private sms: SMS,
     private contacts: Contacts,
-    private callNumber: CallNumber,
     private firebaseService: FirebaseService
   ) {
     this.showToast(

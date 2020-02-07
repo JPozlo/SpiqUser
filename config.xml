@@ -109,8 +109,6 @@
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
     </plugin>
     <plugin name="cordova-plugin-contacts" spec="^3.0.1" />
-    <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
-    <plugin name="cordova-sms-plugin" spec="^1.0.0" />
     <plugin name="cordova-plugin-googleplus" spec="^8.2.1">
         <variable name="WEB_APPLICATION_CLIENT_ID" value="560115770414-g48i0bb7bjj2osg3v2ds5v10h69g72cv.apps.googleusercontent.com" />
     </plugin>

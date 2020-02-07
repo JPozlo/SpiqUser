@@ -1,5 +1,4 @@
 import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
-import { SMS } from "@ionic-native/sms/ngx";
 import { AlertController } from "@ionic/angular";
 import { AuthService } from "./auth.service";
 import { AngularFireAuth } from "@angular/fire/auth";
@@ -55,7 +54,6 @@ export class FirebaseService {
 
   constructor(
     private imgPicker: ImagePicker,
-    private sms: SMS,
     private crop: Crop,
     private fileTransfer: FileTransfer,
     private androidPermissions: AndroidPermissions,

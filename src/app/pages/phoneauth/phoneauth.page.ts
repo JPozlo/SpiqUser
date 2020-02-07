@@ -5,7 +5,7 @@ import { ModalController, AlertController } from "@ionic/angular";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
 import { AuthService } from "src/app/services/auth.service";
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { Firebase } from "@ionic-native/firebase/ngx";
+import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 
 // import * as firebase from 'firebase/app';
 
@@ -28,7 +28,6 @@ export class PhoneauthPage implements OnInit {
     private nativeStorage: NativeStorage,
     private afAuth: AngularFireAuth,
     private firebaseAuth: FirebaseAuthentication,
-    private firebase: Firebase,
     private alertCtrl: AlertController,
     private modalCtrl: ModalController
   ) {

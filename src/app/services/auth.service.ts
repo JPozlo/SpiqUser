@@ -25,7 +25,7 @@ import { NativeStorage } from "@ionic-native/native-storage/ngx";
 
 import * as firebase from "firebase/app";
 import { FirebaseService } from "./firebase.service";
-import { Firebase } from "@ionic-native/firebase/ngx";
+import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 
 // export interface MyUser {
 //   id: Observable<string>;

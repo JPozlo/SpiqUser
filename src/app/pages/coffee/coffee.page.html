@@ -16,8 +16,7 @@
   </ion-fab>
   <ion-card class="domine card-price" color="red-purple">
     <ion-card-header>
-      <ion-card-content
-        >The total price so far is: {{ totalPrice | currency: 'KSH ' }}
+      <ion-card-content>The total price so far is: {{ totalPrice | async}}
       </ion-card-content>
     </ion-card-header>
     <!-- <ion-content>{{ totalPrice }}</ion-content> -->

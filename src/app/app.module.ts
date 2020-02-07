@@ -23,7 +23,7 @@ import { Geolocation } from "@ionic-native/geolocation/ngx";
 import { LocationAccuracy } from "@ionic-native/location-accuracy/ngx";
 import { NativeGeocoder } from "@ionic-native/native-geocoder/ngx";
 import { FirebaseAuthentication } from "@ionic-native/firebase-authentication/ngx";
-import { Firebase } from "@ionic-native/firebase/ngx";
+import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 import { FirebaseAnalytics } from "@ionic-native/firebase-analytics/ngx";
 import { FirebaseDynamicLinks } from "@ionic-native/firebase-dynamic-links/ngx";
 import { ImagePicker } from "@ionic-native/image-picker/ngx";
@@ -33,9 +33,7 @@ import { Camera } from "@ionic-native/camera/ngx";
 import { FileTransfer } from "@ionic-native/file-transfer/ngx";
 import { SocialSharing } from "@ionic-native/social-sharing/ngx";
 import { IonicStorageModule } from "@ionic/storage";
-import { CallNumber } from "@ionic-native/call-number/ngx";
 import { Contacts } from "@ionic-native/contacts/ngx";
-import { SMS } from "@ionic-native/sms/ngx";
 import { GooglePlus } from "@ionic-native/google-plus/ngx";
 import { Facebook } from "@ionic-native/facebook/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
@@ -83,8 +81,6 @@ import { BookingService } from "./services/booking.service";
     ImagePicker,
     Crop,
     Network,
-    CallNumber,
-    SMS,
     Contacts,
     File,
     Facebook,
@@ -99,7 +95,7 @@ import { BookingService } from "./services/booking.service";
     LocationAccuracy,
     NativeGeocoder,
     OneSignal,
-    Firebase,
+    FirebaseX,
     FirebaseAnalytics,
     FirebaseAuthentication,
     FirebaseDynamicLinks,

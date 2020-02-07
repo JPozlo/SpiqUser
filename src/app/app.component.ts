@@ -1,3 +1,4 @@
+import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 import { OneSignal } from "@ionic-native/onesignal/ngx";
 import { Network } from "@ionic-native/network/ngx";
 import { NetworkService } from "./services/network.service";
@@ -27,6 +28,7 @@ import { StatusBar } from "@ionic-native/status-bar/ngx";
 })
 export class AppComponent implements OnInit, OnDestroy {
   showSplash = true;
+  private firebaseX: FirebaseX;
 
   private previousAuthState = false;
   constructor(
@@ -73,6 +75,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.afAuth.auth.onAuthStateChanged(user => {
       if (user) {
         this.navigate(["/", "tab", "tabs", "map"]);
+        this.watchToken();
+        this.notificationSetup();
         // this.router.navigateByUrl('/tab');
       } else {
         this.navigate(["/", "login"]);
@@ -110,6 +114,20 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private navigate(commands: any[]): void {
     this.ngZone.run(() => this.router.navigate(commands)).then();
+  }
+
+  watchToken() {
+    this.firebaseX.onTokenRefresh().subscribe(
+      token => {
+        this.fcmService.saveToken(token).then(
+          success => {
+            this.showAlert("Success", "Token refresh stored successfully");
+          },
+          err => this.showAlert("Error", `Cannot save token due to: ${err}`)
+        );
+      },
+      err => this.showAlert("Error", `Cannot find refresh token cuz of: ${err}`)
+    );
   }
 
   onLogout() {
@@ -154,48 +172,37 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  setupPush() {
-    this.oneSignal.startInit(
-      "601f5c59-3ed2-40e5-9166-b7bfcbeac728",
-      "560115770414"
-    );
-    this.oneSignal.inFocusDisplaying(
-      this.oneSignal.OSInFocusDisplayOption.InAppAlert
-    );
-    this.oneSignal.handleNotificationOpened().subscribe(result => {
-      const additionalData = result.notification.payload.additionalData;
-      this.showAlert(
-        "Notitfication opened!",
-        "You have opened the notification",
-        additionalData.task
-      );
-    });
-    this.oneSignal.handleNotificationReceived().subscribe(data => {
-      const msg = data.payload.body;
-      const title = data.payload.title;
-      const additionalData = data.payload.additionalData;
-      this.showAlert(title, msg, additionalData.task);
-    });
-    this.oneSignal.endInit();
-  }
+  // setupPush() {
+  //   this.oneSignal.startInit(
+  //     "601f5c59-3ed2-40e5-9166-b7bfcbeac728",
+  //     "560115770414"
+  //   );
+  //   this.oneSignal.inFocusDisplaying(
+  //     this.oneSignal.OSInFocusDisplayOption.InAppAlert
+  //   );
+  //   this.oneSignal.handleNotificationOpened().subscribe(result => {
+  //     const additionalData = result.notification.payload.additionalData;
+  //     this.showAlert(
+  //       "Notitfication opened!",
+  //       "You have opened the notification",
+  //       additionalData.task
+  //     );
+  //   });
+  //   this.oneSignal.handleNotificationReceived().subscribe(data => {
+  //     const msg = data.payload.body;
+  //     const title = data.payload.title;
+  //     const additionalData = data.payload.additionalData;
+  //     this.showAlert(title, msg, additionalData.task);
+  //   });
+  //   this.oneSignal.endInit();
+  // }
 
-  showAlert(title, message, task) {
+  showAlert(title, message) {
     this.alertCtrl
       .create({
         header: title,
         message,
-        buttons: [
-          {
-            text: `Action: ${task}`,
-            handler: () => {
-              // Eg Navigate to a specific screen
-            }
-          },
-          {
-            text: "Cancel",
-            role: "cancel"
-          }
-        ]
+        buttons: ["OK"]
       })
       .then(alertEl => alertEl.present());
   }
@@ -206,10 +213,9 @@ export class AppComponent implements OnInit, OnDestroy {
       this.splashScreen.hide();
       timer(3500).subscribe(() => (this.showSplash = false));
       this.automaticDetection();
-      this.notificationSetup();
-      if (this.platform.is("cordova" || "android")) {
-        this.setupPush();
-      }
+      // if (this.platform.is("cordova" || "android")) {
+      //   this.setupPush();
+      // }
     });
   }
 }

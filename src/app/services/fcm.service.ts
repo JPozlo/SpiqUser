@@ -1,6 +1,6 @@
 import { AuthService } from "./auth.service";
 import { Platform } from "@ionic/angular";
-import { Firebase } from "@ionic-native/firebase/ngx";
+import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Injectable } from "@angular/core";
@@ -12,14 +12,14 @@ export class FcmService {
   constructor(
     private afStore: AngularFirestore,
     private afAuth: AngularFireAuth,
-    private firebase: Firebase,
+    private firebase: FirebaseX,
     private platform: Platform,
     private authService: AuthService
   ) {}
 
   async getToken() {
     let token;
-    if (this.platform.is("android")) {
+    if (this.platform.is("android" || "cordova")) {
       token = await this.firebase.getToken();
     }
 
@@ -40,6 +40,6 @@ export class FcmService {
   }
 
   onNotifications() {
-    return this.firebase.onNotificationOpen();
+    return this.firebase.onMessageReceived();
   }
 }
