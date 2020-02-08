@@ -120,14 +120,27 @@ export class MapPage implements OnInit, OnDestroy {
     console.log("yes");
   }
 
+  async showAlert(header, message) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ["OK"]
+    });
+    await alert.present();
+  }
+
   private notificationSetup() {
     this.fcmService.getToken();
-    this.fcmService.onNotifications().subscribe(msg => {
-      console.log(`The message of onNotifications is ${msg}`);
-      if (this.platform.is("android")) {
-        this.presentToast(msg.body);
-      }
-    });
+    this.fcmService.onNotifications().subscribe(
+      msg => {
+        this.showAlert("Data of FCM", `${msg}`);
+        if (this.platform.is("android" || "cordova")) {
+          this.presentToast(msg.title, msg.body);
+          this.presentToast(msg.notification_title, msg.notification_body);
+        }
+      },
+      err => this.fcmService.onError(err)
+    );
   }
 
   initializePage() {
@@ -138,12 +151,14 @@ export class MapPage implements OnInit, OnDestroy {
     });
   }
 
-  private async presentToast(message: string) {
+  private async presentToast(header: string, message: string) {
     const toast = await this.toastCtrl.create({
+      header,
       message,
-      duration: 5000
+      duration: 5000,
+      position: "top"
     });
-    toast.present();
+    await toast.present();
   }
 
   onBook() {

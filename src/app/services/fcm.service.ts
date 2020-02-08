@@ -42,4 +42,8 @@ export class FcmService {
   onNotifications() {
     return this.firebase.onMessageReceived();
   }
+
+  onError(errorBody) {
+    return this.firebase.logError(errorBody);
+  }
 }
