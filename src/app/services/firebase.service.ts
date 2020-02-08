@@ -18,7 +18,7 @@ import {
 
 import * as firebase from "firebase/app";
 import { map } from "rxjs/operators";
-import { Observable, pipe } from "rxjs";
+import { Observable, pipe, BehaviorSubject } from "rxjs";
 import { User } from "./user.service";
 // import { FieldValue } from "@google-cloud/firestore";
 
@@ -35,6 +35,7 @@ export interface Session {
   providedIn: "root"
 })
 export class FirebaseService {
+  numb = new BehaviorSubject(0);
   sessionCollection: AngularFirestoreCollection;
   sessions: Observable<Session[]>;
   session;
@@ -77,29 +78,7 @@ export class FirebaseService {
     await alert.present();
   }
 
-  // getSessionStatus() {
-  //   const db = firebase.firestore();
-  //   const user = this.authService.getUser();
-  //   const userID = user.uid;
-  //   db.collection('users').where('id', '==', userID).onSnapshot(snap => {
-  //     snap.forEach(doc => {
-  //       let data = doc.data();
-  //       let isActive = doc.data().isActive;
-  //       this.isUserActive = isActive;
-  //     });
-  //   }, err => console.log(`Error for testing this is: ${err}`));
-
-  //   const userStatus = this.isUserActive;
-  //   return userStatus;
-  // }
-
-  // checkUserSession(){
-  //   const db = firebase.firestore();
-  //   const user = this.authService.getUser();
-  //   const userID = user.uid;
-  //   const query
-  // }
-
+  // Get history of sessions
   getUserSessions() {
     const db = firebase.firestore();
     const user = this.authService.getUser();
@@ -115,29 +94,31 @@ export class FirebaseService {
           console.log("Sessions", this.session);
           this.mySessions = myarray.push(this.session);
           console.log("MySessions", myarray);
-          this.mySessions += this.session;
         });
       });
     return myarray;
   }
 
-  updateBookingCoffeeValues(coffee) {
+  // Update the user coffee ordered to admin side in booking DB
+  updateBookingCoffeeValues(coffee, coffeePrice) {
     const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
     db.collection("bookings")
-      .where("sessionStatus", "==", true)
       .where("userBookingID", "==", userID)
+      .where("finishedBooking", "==", false)
+      .where("sessionStatus", "==", true)
       .get()
       .then(snap => {
         snap.forEach(doc => {
           const docRef = db.collection("bookings").doc(doc.id);
-          const beforecoffee = doc.data().coffee;
-          // const newcoffee = beforecoffee.concat(...coffee);
+          const oldCoffeePrice = doc.data().totalCoffeePrice;
+          const newCoffeePriceTotal = oldCoffeePrice + coffeePrice;
           docRef
             .set(
               {
-                coffee: firebase.firestore.FieldValue.arrayUnion(...coffee)
+                coffee: firebase.firestore.FieldValue.arrayUnion(...coffee),
+                totalCoffeePrice: newCoffeePriceTotal
               },
               { merge: true }
             )
@@ -155,6 +136,7 @@ export class FirebaseService {
       .catch(err => this.showAlert("Error", `${err}`));
   }
 
+  // Update the coffee price in the session DB
   updateCoffeeSession(coffeePrice) {
     const db = firebase.firestore();
     const user = this.authService.getUser();
@@ -200,9 +182,10 @@ export class FirebaseService {
     const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
-    db.collection("sessions")
-      .where("isActive", "==", true)
+    db.collection("bookings")
       .where("id", "==", userID)
+      .where("finishedBooking", "==", false)
+      .where("sessionStatus", "==", true)
       .onSnapshot(
         snap => {
           snap.forEach(doc => {
@@ -211,7 +194,7 @@ export class FirebaseService {
               "Success!",
               `Retrieved total coffee price: ${this.coffeePrice} from firestore`
             );
-            return this.coffeePrice;
+            // return this.coffeePrice;
           });
         },
         err => {
@@ -223,25 +206,9 @@ export class FirebaseService {
       );
 
     const data = this.coffeePrice;
-    return data;
+    this.numb.next(data);
+    return this.numb.asObservable();
   }
-
-  // updateIsActive(sessionValueStatus: boolean) {
-  //   const db = firebase.firestore();
-  //   const user = this.authService.getUser();
-  //   const userID = user.uid;
-  //   db.collection('users').where('id', '==', userID)
-  //     .get()
-  //     .then(snap => {
-  //       snap.forEach(doc => {
-  //         const docRef = db.collection('users').doc(doc.id);
-  //         docRef.set({ isActive: sessionValueStatus }, { merge: true });
-  //       });
-  //     }, err => {
-  //       this.showAlert('Failure!', `Updating sessionActiveValue failed due to: ${err}`);
-  //     });
-
-  // }
 
   uploadImage(imageURI) {
     return new Promise<any>((resolve, reject) => {

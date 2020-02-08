@@ -24,9 +24,7 @@ export class CoffeePage implements OnInit {
   coffees = [];
   cartItemCount: BehaviorSubject<number>;
 
-  price: Observable<number>;
-
-  totalPrice = 0;
+  totalPrice: Observable<number>;
 
   constructor(
     private coffeeService: CoffeeService,

@@ -1,10 +1,15 @@
+import { StatusBar } from "@ionic-native/status-bar/ngx";
+import { SplashScreen } from "@ionic-native/splash-screen/ngx";
+import { FcmService } from "./../../services/fcm.service";
 import { PlaceslistmodalPage } from "./../placeslistmodal/placeslistmodal.page";
 import { BookingService } from "./../../services/booking.service";
 import {
   AlertController,
   ActionSheetController,
   ModalController,
-  LoadingController
+  LoadingController,
+  ToastController,
+  Platform
 } from "@ionic/angular";
 import {
   Component,
@@ -85,6 +90,8 @@ export class MapPage implements OnInit, OnDestroy {
   place: any;
 
   constructor(
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
     private geolocation: Geolocation,
     private nativeGeocoder: NativeGeocoder,
     private afAuth: AngularFireAuth,
@@ -95,8 +102,13 @@ export class MapPage implements OnInit, OnDestroy {
     private adminService: AdminService,
     private loadingCtrl: LoadingController,
     private bookingService: BookingService,
-    private modalCtrl: ModalController
-  ) {}
+    private modalCtrl: ModalController,
+    private fcmService: FcmService,
+    private toastCtrl: ToastController,
+    private platform: Platform
+  ) {
+    this.initializePage();
+  }
 
   ngOnInit() {
     //this.trackUserPosition();
@@ -106,6 +118,32 @@ export class MapPage implements OnInit, OnDestroy {
   ionViewWillEnter() {
     this.getUserPosition();
     console.log("yes");
+  }
+
+  private notificationSetup() {
+    this.fcmService.getToken();
+    this.fcmService.onNotifications().subscribe(msg => {
+      console.log(`The message of onNotifications is ${msg}`);
+      if (this.platform.is("android")) {
+        this.presentToast(msg.body);
+      }
+    });
+  }
+
+  initializePage() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+      this.notificationSetup();
+    });
+  }
+
+  private async presentToast(message: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 5000
+    });
+    toast.present();
   }
 
   onBook() {

@@ -73,7 +73,10 @@ export class CartModalPage implements OnInit {
         })
         .then(alertEl => {
           alertEl.present();
-          this.firebaseService.updateBookingCoffeeValues(this.cart);
+          this.firebaseService.updateBookingCoffeeValues(
+            this.cart,
+            this.totalPrice
+          );
           this.modalCtrl.dismiss(this.totalPrice);
         });
     }

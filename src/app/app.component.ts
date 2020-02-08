@@ -1,5 +1,4 @@
 import { FirebaseX } from "@ionic-native/firebase-x/ngx";
-import { OneSignal } from "@ionic-native/onesignal/ngx";
 import { Network } from "@ionic-native/network/ngx";
 import { NetworkService } from "./services/network.service";
 import { USER_DETAILS } from "./services/auth.service";
@@ -46,7 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private networkService: NetworkService,
     private actionSheetCtrl: ActionSheetController,
     private network: Network,
-    private oneSignal: OneSignal,
     private alertCtrl: AlertController
   ) {
     this.initializeApp();
@@ -76,11 +74,8 @@ export class AppComponent implements OnInit, OnDestroy {
       if (user) {
         this.navigate(["/", "tab", "tabs", "map"]);
         this.watchToken();
-        this.notificationSetup();
-        // this.router.navigateByUrl('/tab');
       } else {
         this.navigate(["/", "login"]);
-        // this.router.navigateByUrl('/login');
       }
     });
   }
@@ -154,49 +149,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {}
 
-  private async presentToast(message: string) {
-    const toast = await this.toastCtrl.create({
-      message,
-      duration: 5000
-    });
-    toast.present();
-  }
-
-  private notificationSetup() {
-    this.fcmService.getToken();
-    this.fcmService.onNotifications().subscribe(msg => {
-      console.log(`The message of onNotifications is ${msg}`);
-      if (this.platform.is("android")) {
-        this.presentToast(msg.body);
-      }
-    });
-  }
-
-  // setupPush() {
-  //   this.oneSignal.startInit(
-  //     "601f5c59-3ed2-40e5-9166-b7bfcbeac728",
-  //     "560115770414"
-  //   );
-  //   this.oneSignal.inFocusDisplaying(
-  //     this.oneSignal.OSInFocusDisplayOption.InAppAlert
-  //   );
-  //   this.oneSignal.handleNotificationOpened().subscribe(result => {
-  //     const additionalData = result.notification.payload.additionalData;
-  //     this.showAlert(
-  //       "Notitfication opened!",
-  //       "You have opened the notification",
-  //       additionalData.task
-  //     );
-  //   });
-  //   this.oneSignal.handleNotificationReceived().subscribe(data => {
-  //     const msg = data.payload.body;
-  //     const title = data.payload.title;
-  //     const additionalData = data.payload.additionalData;
-  //     this.showAlert(title, msg, additionalData.task);
-  //   });
-  //   this.oneSignal.endInit();
-  // }
-
   showAlert(title, message) {
     this.alertCtrl
       .create({
@@ -213,9 +165,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.splashScreen.hide();
       timer(3500).subscribe(() => (this.showSplash = false));
       this.automaticDetection();
-      // if (this.platform.is("cordova" || "android")) {
-      //   this.setupPush();
-      // }
     });
   }
 }
