@@ -133,7 +133,6 @@ export class MapPage implements OnInit, OnDestroy {
     this.fcmService.getToken();
     this.fcmService.onNotifications().subscribe(
       msg => {
-        this.showAlert("Data of FCM", `${msg}`);
         if (this.platform.is("android" || "cordova")) {
           this.presentToast(msg.title, msg.body);
           this.presentToast(msg.notification_title, msg.notification_body);
