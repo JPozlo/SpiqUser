@@ -123,17 +123,19 @@ export class FirebaseService {
               { merge: true }
             )
             .then(merged => {
-              this.showAlert(
-                "Success",
-                "Updated user coffee cart successfully"
-              );
+              console.log('Success', `Updated coffee price successfuly`); // Replace with crashlytics data
             })
-            .catch(err =>
-              this.showAlert("Error", `Error updating coffee cart: ${err}`)
+            .catch(err => {
+              console.log('Success', `Updated coffee price successfuly`)
+              this.showAlert('Error', `${err}`);
+            }
             );
         });
       })
-      .catch(err => this.showAlert("Error", `${err}`));
+      .catch(err => {
+        console.log('Success', `Updated coffee price successfuly`);
+        this.showAlert('Error', `${err}`);
+      });
   }
 
   // Update the coffee price in the session DB

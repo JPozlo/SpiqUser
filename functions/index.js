@@ -37,7 +37,10 @@ exports.sessionStarted = functions.firestore
             sound: "default"
           },
           data: {
-            Collo: "My custom data"
+            notification_body: "Session started",
+            notification_title: "Your session is now active",
+            notification_android_visibility: '1',
+            notification_android_priority: '1'
           }
         };
         return admin.messaging().sendToDevice(token, payload);
@@ -82,9 +85,10 @@ exports.sessionEnded = functions.firestore
               sound: "default"
             },
             data: {
-              Collo: "My custom data",
-              notification_body: "Notification body",
-              notification_title: "Notification title"
+              notification_body: "Session ended",
+              notification_title: "Your session has been terminated",
+              notification_android_visibility: '1',
+              notification_android_priority: '1'
             }
           };
           return admin.messaging().sendToDevice(token, payload);
