@@ -18,7 +18,7 @@ import {
 
 import * as firebase from "firebase/app";
 import { map } from "rxjs/operators";
-import { Observable, pipe, BehaviorSubject } from "rxjs";
+import { Observable, pipe, BehaviorSubject, of } from "rxjs";
 import { User } from "./user.service";
 // import { FieldValue } from "@google-cloud/firestore";
 
@@ -178,36 +178,45 @@ export class FirebaseService {
     return this.priceUpdateSuccessful;
   }
 
+  // Check session status to use in coffee checkout
+  getCurrentSessionStatus() {
+    const db = firebase.firestore();
+    const user = this.authService.getUser();
+    const userID = user.uid;
+
+    const myRef = db.collection('users').where('id', '==', userID);
+    return new Observable<boolean>(observer => {
+      const status = myRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.isUserActive = doc.data().isSessionActive;
+        });
+        observer.next(this.isUserActive);
+      });
+      return status;
+    });
+
+  }
+
+  // Get the total coffee price for displaying to the user
   getCoffeeTotalPrice() {
     const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
-    db.collection("bookings")
-      .where("id", "==", userID)
-      .where("finishedBooking", "==", false)
-      .where("sessionStatus", "==", true)
-      .onSnapshot(
-        snap => {
-          snap.forEach(doc => {
-            this.coffeePrice = doc.data().coffeeTotalOrderPrice;
-            this.showAlert(
-              "Success!",
-              `Retrieved total coffee price: ${this.coffeePrice} from firestore`
-            );
-            // return this.coffeePrice;
-          });
-        },
-        err => {
-          this.showAlert(
-            "Failure!",
-            `Error in retrieving total coffee price: ${err}`
-          );
-        }
-      );
 
-    const data = this.coffeePrice;
-    this.numb.next(data);
-    return this.numb.asObservable();
+    const myRef = db.collection("bookings")
+      .where("userBookingID", "==", userID)
+      .where("finishedBooking", "==", false)
+      .where("sessionStatus", "==", true);
+
+    return new Observable(observer => {
+      const price = myRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.coffeePrice = doc.data().totalCoffeePrice;
+        });
+        observer.next(this.coffeePrice);
+      })
+      return price;
+    });
   }
 
   uploadImage(imageURI) {
@@ -215,7 +224,7 @@ export class FirebaseService {
       let storageRef = firebase.storage().ref();
       let mydownloadURL = storageRef.getDownloadURL();
       let imageRef = storageRef.child("image").child("imageName");
-      this.encodeImageUri(imageURI, function(image64) {
+      this.encodeImageUri(imageURI, function (image64) {
         imageRef.putString(image64, "data_url").then(
           snapshot => {
             const tokenId = this.authService.getUser().subscribe(data => {
@@ -245,7 +254,7 @@ export class FirebaseService {
     var c = document.createElement("canvas");
     var ctx = c.getContext("2d");
     var img = new Image();
-    img.onload = function() {
+    img.onload = function () {
       var aux: any = this;
       c.width = aux.width;
       c.height = aux.height;

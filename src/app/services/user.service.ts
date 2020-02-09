@@ -23,7 +23,7 @@ export interface User {
   username: string;
   email: string;
   phoneNo: string;
-  isActive: boolean;
+  isSessionActive: boolean;
   image: string;
   role: string;
 }
@@ -57,7 +57,7 @@ export class UserService {
           const id = a.payload.doc.id;
           const email = a.payload.doc.data().email;
           const username = a.payload.doc.data().username;
-          const isActive = a.payload.doc.data().isActive;
+          const isSessionActive = a.payload.doc.data().isSessionActive;
           const image = a.payload.doc.data().image;
           const phoneNo = a.payload.doc.data().phoneNo;
           const role = a.payload.doc.data().role;
@@ -65,7 +65,7 @@ export class UserService {
             id,
             email,
             username,
-            isActive,
+            isSessionActive,
             image,
             phoneNo,
             role,
@@ -154,17 +154,6 @@ export class UserService {
       );
   }
 
-  // updateCurrentUser(updatedUser: User){
-  //   const db = firebase.firestore();
-  //   const user = this.authService.getUser();
-  //   const userID = user.uid;
-  //   db.collection('users').where('id', '==', userID).
-  //   .get()
-  //   .then(snap => {
-  //     snap.
-  //   })
-  // }
-
   getCurrentUser() {
     const db = firebase.firestore();
 
@@ -219,7 +208,7 @@ export class UserService {
   }
 
   addUser(user: User) {
-    return this.userCollection.add(user);
+    return this.userCollection.doc(user.id).set(user);
   }
 
   deleteUser(id: string): Promise<void> {

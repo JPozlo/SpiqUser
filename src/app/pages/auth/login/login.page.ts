@@ -14,6 +14,7 @@ import { Observable } from "rxjs";
 import * as firebase from "firebase/app";
 
 import { GooglePlus } from "@ionic-native/google-plus/ngx";
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: "app-login",
@@ -37,10 +38,11 @@ export class LoginPage implements OnInit {
     private alertCtrl: AlertController,
     private afAuth: AngularFireAuth,
     private platform: Platform,
-    private google: GooglePlus
-  ) {}
+    private google: GooglePlus,
+    private userService: UserService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   resetPass() {
     this.router.navigateByUrl("/forgot-password");
@@ -62,6 +64,7 @@ export class LoginPage implements OnInit {
             console.log("Response of logging in: ", resData);
             this.isLoading = false;
             loadingEl.dismiss();
+            this.authService.storeUserAuthDetails(resData);
             this.router.navigateByUrl("/tab");
           },
           errRes => {
@@ -85,13 +88,26 @@ export class LoginPage implements OnInit {
     this.authService.myGoogleSignin().then(
       success => {
         this.showAlert(`${success.user}`);
+        const user = success.user;
+        const NewUser = {
+          id: user.uid,
+          username: user.displayName,
+          email: user.email,
+          phoneNo: user.phoneNumber,
+          isSessionActive: false,
+          image: user.photoURL,
+          role: "user",
+        };
+
+        this.userService.addUser(NewUser);
+        this.authService.storeUserAuthDetails(user);
         this.router.navigateByUrl("/tab");
       },
       err => this.showAlert(`Error: ${err}`)
     );
   }
 
-  loginTwitter() {}
+  loginTwitter() { }
 
   loginPhone() {
     this.router.navigateByUrl("/phoneauth");

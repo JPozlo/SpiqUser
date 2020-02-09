@@ -2,6 +2,7 @@ import { FirebaseService } from "src/app/services/firebase.service";
 import { Component, OnInit } from "@angular/core";
 import { Coffee, CoffeeService } from "src/app/services/coffee.service";
 import { ModalController, AlertController } from "@ionic/angular";
+import { Observable } from 'rxjs';
 
 @Component({
   selector: "app-cart-modal",
@@ -14,12 +15,19 @@ export class CartModalPage implements OnInit {
   totalPrice = 0;
   thePrice;
 
+  userSessionStatus;
+
   constructor(
     private coffeeService: CoffeeService,
     private firebaseService: FirebaseService,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController
-  ) {}
+  ) {
+    this.firebaseService.getCurrentSessionStatus().subscribe(val => {
+      console.log('Value of Cart Modal', val);
+      this.userSessionStatus = val;
+    });
+  }
 
   ngOnInit() {
     this.cart = this.coffeeService.getCart();
@@ -51,9 +59,7 @@ export class CartModalPage implements OnInit {
   async checkout() {
     // Perfom PayPal or Stripe checkout process
     this.coffeeService.resetCart();
-    // this.firebaseService.updateCoffeeSession(this.totalPrice);
-    const status = this.firebaseService.updateCoffeeSession(this.totalPrice);
-    if (!status) {
+    if (!this.userSessionStatus) {
       this.alertCtrl
         .create({
           header: "Sorry",
@@ -64,7 +70,7 @@ export class CartModalPage implements OnInit {
           alertEl.present();
           this.modalCtrl.dismiss(0);
         });
-    } else if (status) {
+    } else if (this.userSessionStatus) {
       this.alertCtrl
         .create({
           header: "Confirmed",
@@ -73,11 +79,12 @@ export class CartModalPage implements OnInit {
         })
         .then(alertEl => {
           alertEl.present();
+          this.firebaseService.updateCoffeeSession(this.totalPrice);
           this.firebaseService.updateBookingCoffeeValues(
             this.cart,
             this.totalPrice
           );
-          this.modalCtrl.dismiss(this.totalPrice);
+          this.modalCtrl.dismiss();
         });
     }
   }

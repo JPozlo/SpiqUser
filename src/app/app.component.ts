@@ -48,18 +48,16 @@ export class AppComponent implements OnInit, OnDestroy {
     private alertCtrl: AlertController
   ) {
     this.initializeApp();
-    // this.nativeStorage.getItem(USER_DETAILS).then(user => {
-    //   if (user) {
-    //     this.router.navigateByUrl("/tab");
-    //   } else {
-    //     this.router.navigateByUrl("/login");
-    //   }
-    // });
+    this.nativeStorage.getItem(USER_DETAILS).then(user => {
+      if (user) {
+        this.router.navigateByUrl("/tab");
+      } else {
+        this.router.navigateByUrl("/login");
+      }
+    });
 
     this.networkService.connected().subscribe(
-      res => {
-        this.showToast("Connected", `${this.network.type}`);
-      },
+      next => console.log(next),
       err => this.showToast("Error", `${err}`)
     );
 
@@ -147,7 +145,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   showAlert(title, message) {
     this.alertCtrl

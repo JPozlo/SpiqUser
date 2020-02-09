@@ -3,7 +3,7 @@
     <ion-buttons>
       <ion-menu-button menu="menu"></ion-menu-button>
     </ion-buttons>
-    <ion-title>SPiQ</ion-title>
+    <ion-title>Order Coffee</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -16,10 +16,11 @@
   </ion-fab>
   <ion-card class="domine card-price" color="red-purple">
     <ion-card-header>
-      <ion-card-content>The total price so far is: {{ totalPrice | async}}
+      <ion-card-content>The total price so far is: {{ totalPrice | currency:'KSH ' }}
       </ion-card-content>
     </ion-card-header>
-    <!-- <ion-content>{{ totalPrice }}</ion-content> -->
+    <!-- <ion-content>{{ totalPrice }}
+</ion-content> -->
   </ion-card>
   <ion-card color="blue-green" *ngFor="let c of coffees">
     <ion-card-header>

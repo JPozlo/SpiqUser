@@ -24,7 +24,8 @@ export class CoffeePage implements OnInit {
   coffees = [];
   cartItemCount: BehaviorSubject<number>;
 
-  totalPrice: Observable<number>;
+  totalPrice;
+  priceObserver: Observable<any>;
 
   constructor(
     private coffeeService: CoffeeService,
@@ -33,12 +34,10 @@ export class CoffeePage implements OnInit {
     private contacts: Contacts,
     private firebaseService: FirebaseService
   ) {
-    this.showToast(
-      "Important!",
-      "This service is only available if you have an active session"
-    );
-    // this.totalPrice = this.firebaseService.getCoffeeTotalPrice();
-    this.totalPrice = this.firebaseService.getCoffeeTotalPrice();
+    this.firebaseService.getCoffeeTotalPrice().subscribe(val => {
+      console.log('Value:', val);
+      this.totalPrice = val;
+    });
   }
 
   showToast(header: string, message: string) {
@@ -74,7 +73,9 @@ export class CoffeePage implements OnInit {
     modal.onDidDismiss().then(data => {
       this.fab.nativeElement.classList.remove("animated", "bounceOutLeft");
       this.animateCSS("bounceInLeft");
-      // this.totalPrice += data.data;
+      if (data === 0) {
+        this.totalPrice = data;
+      }
     });
     modal.present();
   }

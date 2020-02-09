@@ -33,7 +33,7 @@ export class RegisterPage implements OnInit {
     private userService: UserService,
     private afStore: AngularFirestore,
     private afAuth: AngularFireAuth
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.userCollection = this.afStore.collection("users");
@@ -64,17 +64,17 @@ export class RegisterPage implements OnInit {
               username,
               email: user.email,
               phoneNo: user.phoneNumber,
-              isActive: false,
+              isSessionActive: false,
               image: user.photoURL,
-              role: "user"
+              role: "user",
             };
 
             console.log("Response of signing in is ", res);
             console.log("UID of the user is", id);
 
-            this.authService.storeUserAuthDetails(user);
 
             this.userService.addUser(NewUser);
+            this.authService.storeUserAuthDetails(user);
 
             this.isLoading = false;
             loadingEl.dismiss();
@@ -90,10 +90,29 @@ export class RegisterPage implements OnInit {
   }
 
   loginGoogle() {
-    this.authService.myGoogleSignin();
+    this.authService.myGoogleSignin().then(
+      success => {
+        this.showAlert(`${success.user}`);
+        const user = success.user;
+        const NewUser = {
+          id: user.uid,
+          username: user.displayName,
+          email: user.email,
+          phoneNo: user.phoneNumber,
+          isSessionActive: false,
+          image: user.photoURL,
+          role: "user",
+        };
+
+        this.userService.addUser(NewUser);
+        this.authService.storeUserAuthDetails(user);
+        this.router.navigateByUrl("/tab");
+      },
+      err => this.showAlert(`Error: ${err}`)
+    );;
   }
 
-  loginTwitter() {}
+  loginTwitter() { }
 
   loginPhone() {
     this.router.navigateByUrl("/phoneauth");

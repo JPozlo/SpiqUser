@@ -3,39 +3,44 @@
     <ion-buttons>
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Your History</ion-title>
+    <ion-title>Your Sessions</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <ion-grid>
-      <ion-item *ngFor="let item of history">
+    <ion-grid *ngIf="!history || history.length === 0">
+      <ion-item [routerLink]="['/tab']" routerLinkActive="router-link-active">
         <ion-row>
-          <ion-col size="10" offset="1">
-            <ion-label
-              >{{ item.timestampStart.seconds * 1000 | date:'yyyy/MM/dd HH:mm'
-              }}</ion-label
-            >
-          </ion-col>
-          <ion-col size="8" offset="2">
-            <span>to</span>
-          </ion-col>
-          <ion-col size="10" offset="1">
-            <ion-label
-              >{{ item.timestampEnd.seconds * 1000 | date:'yyyy/MM/dd HH:mm'
-              }}</ion-label
-            >
-          </ion-col>
-          <ion-col size="12">
+          <ion-col>
             <ion-label>
-              The total price of coffee ordered: {{ item.coffeeTotalOrderPrice |
-              currency: 'KSH ' }}
+              Your history is lonely :( <br> Care to try one of our places?
             </ion-label>
           </ion-col>
         </ion-row>
-        <hr />
       </ion-item>
+    </ion-grid>
+    <ion-grid *ngIf="history || history.length > 0">
+      <ion-card *ngFor="let item of history">
+        <ion-card-header>
+          <ion-card-title class="comfortaa">{{ item.createdBy }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-row class="ion-align-items-center">
+            <ion-col size="8">
+              <ion-label class="righteous">
+                <b>{{ item.timestampStart.seconds * 1000 | date:'dd/yy/MM, HH:mm'}} to
+                  {{ item.timestampEnd.seconds * 1000 | date:'HH:mm'}}</b>
+              </ion-label>
+            </ion-col>
+            <ion-col size="4" class="ion-text-right">
+              <ion-label>
+                {{ item.coffeeTotalOrderPrice | currency: 'KSH ' }}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
     </ion-grid>
   </ion-list>
 </ion-content>

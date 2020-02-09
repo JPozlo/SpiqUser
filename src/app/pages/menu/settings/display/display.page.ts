@@ -1,14 +1,19 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from "@angular/core";
 
 @Component({
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   selector: "app-display",
   templateUrl: "./display.page.html",
   styleUrls: ["./display.page.scss"]
 })
 export class DisplayPage implements OnInit {
-  constructor() {}
 
-  ngOnInit() {}
+  myToggleValue: boolean;
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
 
   changeColour() {
     // Query for the toggle that is used to change between themes
@@ -36,5 +41,6 @@ export class DisplayPage implements OnInit {
     function checkToggle(shouldCheck) {
       (toggle as any).checked = shouldCheck;
     }
+    this.myToggleValue = !this.myToggleValue;
   }
 }

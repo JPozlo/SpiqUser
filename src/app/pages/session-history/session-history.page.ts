@@ -15,5 +15,5 @@ export class SessionHistoryPage implements OnInit {
     console.log(this.history);
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }
