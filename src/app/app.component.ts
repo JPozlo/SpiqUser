@@ -15,7 +15,8 @@ import {
   ToastController,
   MenuController,
   ActionSheetController,
-  AlertController
+  AlertController,
+  NavController
 } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
@@ -47,22 +48,10 @@ export class AppComponent implements OnInit, OnDestroy {
     private actionSheetCtrl: ActionSheetController,
     private network: Network,
     private alertCtrl: AlertController,
-    private firebaseAnalytics: FirebaseAnalytics
+    private firebaseAnalytics: FirebaseAnalytics,
+    private navCtrl: NavController
   ) {
     this.initializeApp();
-    // this.nativeStorage.getItem(USER_DETAILS).then(user => {
-    //   if (user) {
-    //     this.router.navigateByUrl("/tab");
-    //   } else {
-    //     this.router.navigateByUrl("/login");
-    //   }
-    // });
-
-    this.networkService.connected().subscribe(
-      next => console.log(next),
-      err => this.showToast("Error", `${err}`)
-    );
-
     this.networkService.disconnected().subscribe(
       res => {
         this.showToast("No Internet!", "Connect to wifi or mobile network.");
@@ -77,12 +66,10 @@ export class AppComponent implements OnInit, OnDestroy {
         this.firebaseAnalytics.setUserProperty('email', user.email);
         this.firebaseAnalytics.setUserProperty('phone number', user.phoneNumber);
         this.firebaseAnalytics.setUserProperty('photo', user.photoURL);
-        this.authService.isAuthenticated(true);
-        this.navigate(["/", "tab", "tabs", "map"]);
+        this.navCtrl.navigateRoot('/tab')
         this.watchToken();
       } else {
-        this.authService.isAuthenticated(false);
-        this.navigate(["/", "login"]);
+        this.navCtrl.navigateRoot('/login')
       }
     });
   }

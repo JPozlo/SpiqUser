@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { FirebaseService, Session } from "src/app/services/firebase.service";
 import { Component, OnInit } from "@angular/core";
 import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 
 @Component({
   selector: "app-session-history",
@@ -11,10 +12,11 @@ import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 export class SessionHistoryPage implements OnInit {
   history;
 
-  constructor(private firebaseService: FirebaseService, private analysisService: AnalysisCrashService) {
+  constructor(private firebaseService: FirebaseService, private analysisService: AnalysisCrashService, private nativeStorage: NativeStorage) {
     this.analysisService.setPageName('Session History Page');
     this.history = firebaseService.getUserSessions();
     console.log(this.history);
+    this.nativeStorage.setItem('SessionHistory', this.history);
   }
 
   ngOnInit() { }

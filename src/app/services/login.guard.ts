@@ -1,5 +1,5 @@
 import { first } from "rxjs/operators";
-import { AuthService } from "src/app/services/auth.service";
+import { AuthService, USER_DETAILS } from "src/app/services/auth.service";
 import { Injectable } from "@angular/core";
 import {
   ActivatedRouteSnapshot,
@@ -9,57 +9,31 @@ import {
   Router
 } from "@angular/router";
 import { Observable } from "rxjs";
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import * as firebase from 'firebase/app';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: "root"
 })
 export class LoginGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router, private afAuth: AngularFireAuth, private navCtrl: NavController) { }
 
-  // async wraps function in a promise
-  // (angular will wait for promises and observables to complete; if they never complete the page will hang!)
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean | UrlTree {
-    if (this.authService.isAuthenticated(true)) {
-      this.router.navigateByUrl("/tab");
-      return false;
-    }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    this.router.navigateByUrl("/login");
-    return true;
+    return new Promise((resolve, reject) => {
+      this.afAuth.user.subscribe((user) => {
+        if (user) {
+          this.navCtrl.navigateRoot('/tab')
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      }, err => reject(err))
+    })
 
-    if (!this.authService.isLoggedIn) {
-      this.router.navigateByUrl("/login");
-      return true;
-    }
-    this.router.navigateByUrl("/tab");
-    return false;
 
-    // const userIsAuth = this.authService.getUserIsAuthenticated();
-    // if (userIsAuth) {
-    //   return false;
-    // } else {
-    //   return true;
-    // }
-
-    // Call isLoggedIn method and await result.
-    // If false allow navigation to login page, else navigate to home
-    // const user = this.authService
-    //   .isLoggedIn()
-    //   .pipe(first())
-    //   .toPromise();
-    // if (!user) {
-    //   this.router.navigateByUrl("/login");
-    //   return true;
-    // } else {
-    //   return false;
-    // }
-    // if (!this.authService.isLoggedIn()) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
   }
+
 }

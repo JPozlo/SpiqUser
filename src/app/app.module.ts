@@ -104,4 +104,4 @@ import { BookingService } from "./services/booking.service";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

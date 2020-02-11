@@ -71,15 +71,11 @@ export class AuthService implements OnDestroy {
     });
   }
 
+  private isAuthenticated = false;
   private user: firebase.User;
   private activeLogoutTimer: any;
 
   ngOnDestroy() { }
-
-  isAuthenticated(boolean) {
-    this.authState.next(boolean);
-    return this.authState.value;
-  }
 
   // Pipe first value emitted and convert to promise
   isUserLoggedIn() {
@@ -91,10 +87,6 @@ export class AuthService implements OnDestroy {
     return emailVerifyState;
   }
 
-  // googleSignIn(){
-  //   this.google.login()
-  // }
-
   async myGoogleSignin() {
     try {
       const gplusUser = await this.google.login({
@@ -103,6 +95,7 @@ export class AuthService implements OnDestroy {
         scopes: "profile email"
       });
 
+      this.isAuthenticated = true;
       return await this.afAuth.auth.signInWithCredential(
         firebase.auth.GoogleAuthProvider.credential(gplusUser.idToken)
       );
@@ -111,37 +104,8 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  // myGoogleSignin() {
-  //   const provider = new firebase.auth.GoogleAuthProvider();
-  //   firebase
-  //     .auth()
-  //     .signInWithRedirect(provider)
-  //     .then(result => {
-  //       firebase
-  //         .auth()
-  //         .getRedirectResult()
-  //         .then(thisresult => {
-  //           const credential = thisresult.credential;
-  //           const user = thisresult.user;
-  //           this.router.navigateByUrl("/tab");
-  //         })
-  //         .catch(err => this.showAlert(`Error`, `${err}`));
-  //     })
-  //     .catch(error => {
-  //       // Handle errors here
-  //       this.showAlert("Error", `${error}`);
-  //     });
-  // }
-
   getUserIsAuthenticated() {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.stateValue = true;
-      }
-      this.stateValue = false;
-    });
-
-    return this.stateValue;
+    return this.isAuthenticated;
   }
 
   signInUserWithEmail(email: string, password: string) {
@@ -153,6 +117,7 @@ export class AuthService implements OnDestroy {
           res => {
             const user = res.user;
             this.storeUserAuthDetails(user);
+            this.isAuthenticated = true;
             resolve(res);
           },
           err => {
@@ -164,7 +129,15 @@ export class AuthService implements OnDestroy {
   }
 
   storeUserAuthDetails(userData) {
-    this.nativeStorage.setItem(USER_DETAILS, userData);
+    this.storage.set(USER_DETAILS, userData);
+  }
+
+  getUserAuthData() {
+    return this.storage.get(USER_DETAILS);
+  }
+
+  removeUserAuthDetails() {
+    return this.storage.remove(USER_DETAILS);
   }
 
   signUpUserWithEMail(email: string, password: string) {
@@ -176,6 +149,7 @@ export class AuthService implements OnDestroy {
           res => {
             const user = res.user;
             this.storeUserAuthDetails(user);
+            this.isAuthenticated = true;
             resolve(res);
           },
           err => reject(err)
@@ -310,7 +284,8 @@ export class AuthService implements OnDestroy {
           .auth()
           .signOut()
           .then(() => {
-            this.nativeStorage.remove(USER_DETAILS);
+            this.removeUserAuthDetails();
+            this.isAuthenticated = false;
             this.router.navigateByUrl("/login");
             console.log("Log out");
             resolve();

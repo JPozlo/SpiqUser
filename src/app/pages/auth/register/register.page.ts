@@ -87,7 +87,7 @@ export class RegisterPage implements OnInit {
           err => {
             loadingEl.dismiss();
             let message = `Could not sign up because of ${err}. Try again.`;
-            this.showAlert(message);
+            this.showAlert('Error occured!', message);
           }
         );
       });
@@ -96,7 +96,6 @@ export class RegisterPage implements OnInit {
   loginGoogle() {
     this.authService.myGoogleSignin().then(
       success => {
-        this.showAlert(`${success.user}`);
         const user = success.user;
         const NewUser = {
           id: user.uid,
@@ -112,7 +111,7 @@ export class RegisterPage implements OnInit {
         this.authService.storeUserAuthDetails(user);
         this.router.navigateByUrl("/tab");
       },
-      err => this.showAlert(`Error: ${err}`)
+      err => this.showAlert(`Error`, `${err}`)
     );;
   }
 
@@ -122,9 +121,9 @@ export class RegisterPage implements OnInit {
     this.router.navigateByUrl("/phoneauth");
   }
 
-  private showAlert(message: string) {
+  private showAlert(header: string, message: string) {
     this.alertCtrl
-      .create({ header: "Authentication failed!", message, buttons: ["OK"] })
+      .create({ header, message, buttons: ["OK"] })
       .then(alertEl => alertEl.present());
   }
 
@@ -140,7 +139,7 @@ export class RegisterPage implements OnInit {
     this.cpassword = form.value.cpassword;
 
     if (this.password !== this.cpassword) {
-      this.showAlert("Passwords don't match");
+      this.showAlert('Sorry', "Passwords don't match");
     }
 
     console.dir(this.username, this.email, this.password, this.cpassword);

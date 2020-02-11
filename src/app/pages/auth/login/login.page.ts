@@ -82,7 +82,7 @@ export class LoginPage implements OnInit {
             } else if (code === "INVALID_PASSWORD") {
               message = "This passowrd is not correct.";
             }
-            this.showAlert(message);
+            this.showAlert('Authentication Failed', message);
           }
         );
       });
@@ -91,7 +91,6 @@ export class LoginPage implements OnInit {
   loginGoogle() {
     this.authService.myGoogleSignin().then(
       success => {
-        this.showAlert(`${success.user}`);
         const user = success.user;
         const NewUser = {
           id: user.uid,
@@ -102,12 +101,11 @@ export class LoginPage implements OnInit {
           image: user.photoURL,
           role: "user",
         };
-
         this.userService.addUser(NewUser);
         this.authService.storeUserAuthDetails(user);
         this.router.navigateByUrl("/tab");
       },
-      err => this.showAlert(`Error: ${err}`)
+      err => this.showAlert('Authentication Failed', `Error: ${err}`)
     );
   }
 
@@ -117,9 +115,9 @@ export class LoginPage implements OnInit {
     this.router.navigateByUrl("/phoneauth");
   }
 
-  private showAlert(message: string) {
+  private showAlert(header: string, message: string) {
     this.alertCtrl
-      .create({ header: "Authentication failed!", message, buttons: ["OK"] })
+      .create({ header, message, buttons: ["OK"] })
       .then(alertEl => alertEl.present());
   }
 

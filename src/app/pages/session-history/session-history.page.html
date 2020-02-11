@@ -9,17 +9,6 @@
 
 <ion-content>
   <ion-list>
-    <ion-grid *ngIf="!history || history.length === 0">
-      <ion-item [routerLink]="['/tab']" routerLinkActive="router-link-active">
-        <ion-row>
-          <ion-col>
-            <ion-label>
-              Your history is lonely :( <br> Care to try one of our places?
-            </ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-item>
-    </ion-grid>
     <ion-grid *ngIf="history || history.length > 0">
       <ion-card *ngFor="let item of history">
         <ion-card-header>
@@ -41,6 +30,17 @@
           </ion-row>
         </ion-card-content>
       </ion-card>
+    </ion-grid>
+    <ion-grid *ngIf="!history || history.length === 0">
+      <ion-item [routerLink]="['/tab']" routerLinkActive="router-link-active">
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              Your history is lonely :( <br> Care to try one of our places?
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-item>
     </ion-grid>
   </ion-list>
 </ion-content>
