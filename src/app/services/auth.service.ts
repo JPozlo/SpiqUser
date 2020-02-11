@@ -39,7 +39,6 @@ export const USER_DETAILS = "UserDetails";
   providedIn: "root"
 })
 export class AuthService implements OnDestroy {
-  authState = new BehaviorSubject(null);
   theResponse: Observable<any>;
   MyUser: Observable<any>;
 
@@ -47,6 +46,8 @@ export class AuthService implements OnDestroy {
   // private userToken;
   stateValue: boolean;
   isLoggedIn: boolean;
+
+  authState: BehaviorSubject<boolean>;
 
   constructor(
     private http: HttpClient,
@@ -73,7 +74,12 @@ export class AuthService implements OnDestroy {
   private user: firebase.User;
   private activeLogoutTimer: any;
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
+
+  isAuthenticated(boolean) {
+    this.authState.next(boolean);
+    return this.authState.value;
+  }
 
   // Pipe first value emitted and convert to promise
   isUserLoggedIn() {

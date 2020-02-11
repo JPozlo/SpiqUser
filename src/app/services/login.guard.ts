@@ -14,7 +14,7 @@ import { Observable } from "rxjs";
   providedIn: "root"
 })
 export class LoginGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   // async wraps function in a promise
   // (angular will wait for promises and observables to complete; if they never complete the page will hang!)
@@ -22,6 +22,14 @@ export class LoginGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean | UrlTree {
+    if (this.authService.isAuthenticated(true)) {
+      this.router.navigateByUrl("/tab");
+      return false;
+    }
+
+    this.router.navigateByUrl("/login");
+    return true;
+
     if (!this.authService.isLoggedIn) {
       this.router.navigateByUrl("/login");
       return true;

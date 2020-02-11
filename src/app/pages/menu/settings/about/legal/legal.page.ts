@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: 'app-legal',
@@ -7,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LegalPage implements OnInit {
 
-  constructor() { }
+  constructor(private analysisService: AnalysisCrashService) {
+    this.analysisService.setPageName('Legal Page');
+  }
 
   ngOnInit() {
   }

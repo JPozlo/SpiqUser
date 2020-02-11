@@ -11,6 +11,7 @@ import { CoffeeService } from "./../../services/coffee.service";
 import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { ModalController, ToastController } from "@ionic/angular";
 import { CartModalPage } from "./cart-modal/cart-modal.page";
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: "app-coffee",
@@ -32,8 +33,10 @@ export class CoffeePage implements OnInit {
     private modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private contacts: Contacts,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private analysisService: AnalysisCrashService
   ) {
+    this.analysisService.setPageName('Coffee');
     this.firebaseService.getCoffeeTotalPrice().subscribe(val => {
       console.log('Value:', val);
       this.totalPrice = val;

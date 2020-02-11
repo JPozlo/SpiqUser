@@ -15,6 +15,7 @@ import * as firebase from "firebase/app";
 
 import { GooglePlus } from "@ionic-native/google-plus/ngx";
 import { UserService } from 'src/app/services/user.service';
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: "app-login",
@@ -39,8 +40,11 @@ export class LoginPage implements OnInit {
     private afAuth: AngularFireAuth,
     private platform: Platform,
     private google: GooglePlus,
-    private userService: UserService
-  ) { }
+    private userService: UserService,
+    private analysisService: AnalysisCrashService
+  ) {
+    this.analysisService.setPageName('login');
+  }
 
   ngOnInit() { }
 

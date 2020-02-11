@@ -30,6 +30,7 @@ import {
   AngularFirestore
 } from "@angular/fire/firestore";
 import { finalize, tap, map } from "rxjs/operators";
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 export interface MyData {
   name: string;
@@ -112,8 +113,10 @@ export class ProfilePage implements OnInit {
     private afStorage: AngularFireStorage,
     private afStore: AngularFirestore,
     private afAuth: AngularFireAuth,
-    private userService: UserService
+    private userService: UserService,
+    private analysisService: AnalysisCrashService
   ) {
+    this.analysisService.setPageName('Profile');
     this.isUploading = false;
     this.isUploaded = false;
     // Set collection where our documents/ images info will save
@@ -155,9 +158,9 @@ export class ProfilePage implements OnInit {
     });
   }
 
-  updateName() {}
+  updateName() { }
 
-  updateEmail() {}
+  updateEmail() { }
 
   updatePhone() {
     // this.user.phoneNumber = this.phoneNo;

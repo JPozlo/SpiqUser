@@ -19,6 +19,7 @@ import {
 } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
+import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
 
 @Component({
   selector: "app-root",
@@ -45,16 +46,17 @@ export class AppComponent implements OnInit, OnDestroy {
     private networkService: NetworkService,
     private actionSheetCtrl: ActionSheetController,
     private network: Network,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private firebaseAnalytics: FirebaseAnalytics
   ) {
     this.initializeApp();
-    this.nativeStorage.getItem(USER_DETAILS).then(user => {
-      if (user) {
-        this.router.navigateByUrl("/tab");
-      } else {
-        this.router.navigateByUrl("/login");
-      }
-    });
+    // this.nativeStorage.getItem(USER_DETAILS).then(user => {
+    //   if (user) {
+    //     this.router.navigateByUrl("/tab");
+    //   } else {
+    //     this.router.navigateByUrl("/login");
+    //   }
+    // });
 
     this.networkService.connected().subscribe(
       next => console.log(next),
@@ -70,9 +72,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.afAuth.auth.onAuthStateChanged(user => {
       if (user) {
+        this.firebaseAnalytics.setUserId(user.uid);
+        this.firebaseAnalytics.setUserProperty('name', user.displayName);
+        this.firebaseAnalytics.setUserProperty('email', user.email);
+        this.firebaseAnalytics.setUserProperty('phone number', user.phoneNumber);
+        this.firebaseAnalytics.setUserProperty('photo', user.photoURL);
+        this.authService.isAuthenticated(true);
         this.navigate(["/", "tab", "tabs", "map"]);
         this.watchToken();
       } else {
+        this.authService.isAuthenticated(false);
         this.navigate(["/", "login"]);
       }
     });
@@ -114,12 +123,12 @@ export class AppComponent implements OnInit, OnDestroy {
       token => {
         this.fcmService.saveToken(token).then(
           success => {
-            this.showAlert("Success", "Token refresh stored successfully");
+            this.showAlert("Success", "Token refresh stored successfully"); // Replace with anlytics data
           },
-          err => this.showAlert("Error", `Cannot save token due to: ${err}`)
+          err => this.showAlert("Error", `Cannot save token due to: ${err}`) // Replace with analytics data
         );
       },
-      err => this.showAlert("Error", `Cannot find refresh token cuz of: ${err}`)
+      err => this.showAlert("Error", `Cannot find refresh token cuz of: ${err}`) // Replace with analytics data
     );
   }
 
@@ -161,6 +170,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.firebaseAnalytics.setEnabled(true);
       timer(3500).subscribe(() => (this.showSplash = false));
       this.automaticDetection();
     });

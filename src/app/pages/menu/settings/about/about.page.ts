@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: 'app-about',
@@ -7,7 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AboutPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private analysisService: AnalysisCrashService
+  ) {
+    this.analysisService.setPageName('About Page');
+  }
 
   ngOnInit() {
   }

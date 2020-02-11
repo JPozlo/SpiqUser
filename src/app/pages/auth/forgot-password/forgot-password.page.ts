@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -13,7 +14,13 @@ export class ForgotPasswordPage implements OnInit {
   email;
   error;
 
-  constructor(private afAuth: AngularFireAuth, private router: Router, private toastCtrl: ToastController) { }
+  constructor(
+    private analysisService: AnalysisCrashService,
+    private afAuth: AngularFireAuth,
+    private router: Router,
+    private toastCtrl: ToastController) {
+    this.analysisService.setPageName('Reset Password');
+  }
 
   ngOnInit() {
   }

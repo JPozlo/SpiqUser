@@ -10,6 +10,7 @@ import {
   AngularFirestoreCollection,
   AngularFirestore
 } from "@angular/fire/firestore";
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: "app-register",
@@ -32,8 +33,11 @@ export class RegisterPage implements OnInit {
     private alertCtrl: AlertController,
     private userService: UserService,
     private afStore: AngularFirestore,
-    private afAuth: AngularFireAuth
-  ) { }
+    private afAuth: AngularFireAuth,
+    private analysisService: AnalysisCrashService
+  ) {
+    this.analysisService.setPageName('register');
+  }
 
   ngOnInit() {
     this.userCollection = this.afStore.collection("users");

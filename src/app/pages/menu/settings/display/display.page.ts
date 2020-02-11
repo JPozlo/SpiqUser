@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from "@angular/core";
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   // changeDetection: ChangeDetectionStrategy.OnPush,
@@ -9,7 +10,8 @@ import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } fro
 export class DisplayPage implements OnInit {
 
   myToggleValue: boolean;
-  constructor() {
+  constructor(private analysisService: AnalysisCrashService) {
+    this.analysisService.setPageName('Display Page');
   }
 
   ngOnInit() {

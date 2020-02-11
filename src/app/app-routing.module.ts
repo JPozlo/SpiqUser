@@ -4,12 +4,12 @@ import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 import { AuthGuard } from "./services/auth.guard";
 
 const routes: Routes = [
-  { path: "", redirectTo: "login", pathMatch: "full" },
+  { path: "", redirectTo: "tab", pathMatch: "full" },
   {
     path: "login",
     loadChildren: () =>
-      import("./pages/auth/login/login.module").then(m => m.LoginPageModule)
-    // canActivate: [LoginGuard]
+      import("./pages/auth/login/login.module").then(m => m.LoginPageModule),
+    canActivate: [LoginGuard]
   },
   {
     path: "register",
@@ -80,12 +80,18 @@ const routes: Routes = [
       import("./pages/test/test.module").then(m => m.TestPageModule)
   },
   {
-    path: 'placeslistmodal',
-    loadChildren: () => import('./pages/placeslistmodal/placeslistmodal.module').then( m => m.PlaceslistmodalPageModule)
+    path: "placeslistmodal",
+    loadChildren: () =>
+      import("./pages/placeslistmodal/placeslistmodal.module").then(
+        m => m.PlaceslistmodalPageModule
+      )
   },
   {
-    path: 'session-history',
-    loadChildren: () => import('./pages/session-history/session-history.module').then( m => m.SessionHistoryPageModule)
+    path: "session-history",
+    loadChildren: () =>
+      import("./pages/session-history/session-history.module").then(
+        m => m.SessionHistoryPageModule
+      )
   }
 ];
 

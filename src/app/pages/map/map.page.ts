@@ -39,6 +39,7 @@ import { Observable, Subscription } from "rxjs";
 import { AuthService } from "src/app/services/auth.service";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { AdminService } from "src/app/services/admin.service";
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 declare var google;
 
@@ -105,8 +106,10 @@ export class MapPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private fcmService: FcmService,
     private toastCtrl: ToastController,
-    private platform: Platform
+    private platform: Platform,
+    private analysisService: AnalysisCrashService
   ) {
+    this.analysisService.setPageName('map');
     this.initializePage();
   }
 
@@ -114,7 +117,7 @@ export class MapPage implements OnInit, OnDestroy {
     //this.trackUserPosition();
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
   ionViewWillEnter() {
     this.getUserPosition();
     console.log("yes");
@@ -169,7 +172,7 @@ export class MapPage implements OnInit, OnDestroy {
       (results: Array<any>) => {
         this.places = results;
         console.log("Places array: ", this.places);
-        this.filteredPlacesID = results.map(function(value, index) {
+        this.filteredPlacesID = results.map(function (value, index) {
           return value.place_id;
         });
         console.log("The filtered places ID are: ", this.filteredPlacesID);
@@ -258,7 +261,7 @@ export class MapPage implements OnInit, OnDestroy {
       key: "AIzaSyBkv2XkDpOFVZ1NMaI2pW3p-syAK3D0ZHc"
     };
     return new Promise((resolve, reject) => {
-      service.nearbySearch(request, function(results, status) {
+      service.nearbySearch(request, function (results, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           resolve(results);
         } else {

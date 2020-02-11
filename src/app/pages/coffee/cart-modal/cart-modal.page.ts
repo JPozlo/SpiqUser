@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { Coffee, CoffeeService } from "src/app/services/coffee.service";
 import { ModalController, AlertController } from "@ionic/angular";
 import { Observable } from 'rxjs';
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: "app-cart-modal",
@@ -21,8 +22,10 @@ export class CartModalPage implements OnInit {
     private coffeeService: CoffeeService,
     private firebaseService: FirebaseService,
     private modalCtrl: ModalController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private analysisService: AnalysisCrashService
   ) {
+    this.analysisService.setPageName('Coffee Cart Modal');
     this.firebaseService.getCurrentSessionStatus().subscribe(val => {
       console.log('Value of Cart Modal', val);
       this.userSessionStatus = val;

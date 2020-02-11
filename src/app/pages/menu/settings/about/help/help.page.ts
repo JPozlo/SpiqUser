@@ -1,5 +1,6 @@
 import { NgForm } from "@angular/forms";
 import { Component, OnInit } from "@angular/core";
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: "app-help",
@@ -9,9 +10,11 @@ import { Component, OnInit } from "@angular/core";
 export class HelpPage implements OnInit {
   helpMessage: string;
 
-  constructor() {}
+  constructor(private analysisService: AnalysisCrashService) {
+    this.analysisService.setPageName('Help Page');
+  }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   onSubmit(form: NgForm) {
     this.helpMessage = form.value.helpMsg;

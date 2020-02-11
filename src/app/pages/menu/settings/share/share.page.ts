@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: 'app-share',
@@ -8,7 +9,9 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 })
 export class SharePage implements OnInit {
 
-  constructor(private socialSharing: SocialSharing) { }
+  constructor(private socialSharing: SocialSharing, private analysisService: AnalysisCrashService) {
+    this.analysisService.setPageName('Share Page');
+  }
 
   ngOnInit() {
   }

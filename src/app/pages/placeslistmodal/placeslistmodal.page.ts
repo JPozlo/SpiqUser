@@ -5,6 +5,7 @@ import {
   ActionSheetController
 } from "@ionic/angular";
 import { Component, OnInit, Input } from "@angular/core";
+import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
 
 @Component({
   selector: "app-placeslistmodal",
@@ -37,14 +38,16 @@ export class PlaceslistmodalPage implements OnInit {
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private analysisService: AnalysisCrashService
   ) {
+    this.analysisService.setPageName('Place Booking Modal');
     this.placesList = this.navParams.get("places");
     console.log(this.placesList);
     this.thePlacesList = this.filterPlaces();
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   filterPlaces() {
     for (let i = 0; i < this.placesList.length; i++) {
