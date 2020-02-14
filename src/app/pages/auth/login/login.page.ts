@@ -105,7 +105,7 @@ export class LoginPage implements OnInit {
         };
         this.userService.addUser(NewUser);
         this.authService.storeUserAuthDetails(user);
-        this.router.navigateByUrl("/tab");
+        this.navCtrl.navigateForward('/tab')
       },
       err => this.showAlert('Authentication Failed', `Error: ${err}`)
     );

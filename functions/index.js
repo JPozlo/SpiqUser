@@ -37,8 +37,8 @@ exports.sessionStarted = functions.firestore
             sound: "default"
           },
           data: {
-            notification_body: "Session started",
-            notification_title: "Your session is now active",
+            notification_body: "Your session is now active",
+            notification_title: "Session started",
             notification_android_visibility: '1',
             notification_android_priority: '1'
           }
@@ -80,13 +80,13 @@ exports.sessionEnded = functions.firestore
           const token = doc.data().token;
           const payload = {
             notification: {
-              title: `Session ended`,
+              title: `Session finished`,
               body: `Your session has been terminated`,
               sound: "default"
             },
             data: {
-              notification_body: "Session ended",
-              notification_title: "Your session has been terminated",
+              notification_body: "Your session has been terminated",
+              notification_title: "Session finished",
               notification_android_visibility: '1',
               notification_android_priority: '1'
             }

@@ -11,14 +11,21 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ["./session-history.page.scss"]
 })
 export class SessionHistoryPage implements OnInit {
-  history;
+  history: Observable<Session[]>;
+  loadedHistory: any[];
 
   constructor(private firebaseService: FirebaseService, private analysisService: AnalysisCrashService, private nativeStorage: NativeStorage) {
     this.analysisService.setPageName('Session History Page');
-    this.history = firebaseService.getUserSessions()
+    this.history = firebaseService.getUserSessions();
     console.log(this.history);
     this.nativeStorage.setItem('SessionHistory', this.history);
+
+
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+
+  }
+
+
 }

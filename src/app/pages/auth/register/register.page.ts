@@ -110,7 +110,7 @@ export class RegisterPage implements OnInit {
 
         this.userService.addUser(NewUser);
         this.authService.storeUserAuthDetails(user);
-        this.router.navigateByUrl("/tab");
+        this.navctrl.navigateForward('/tab');
       },
       err => this.showAlert(`Error`, `${err}`)
     );;

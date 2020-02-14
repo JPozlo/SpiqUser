@@ -83,20 +83,25 @@ export class FirebaseService {
     const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
-    let myarray = [];
-    const query = db
+
+    const myRef = db
       .collection("sessions")
       .where("id", "==", userID)
-      .where("isActive", "==", false)
-      .onSnapshot(snap => {
-        snap.forEach(doc => {
+      .where("isActive", "==", false);
+
+    let myarray: any[] = [];
+
+    return new Observable<Session[]>(observer => {
+      const sessions = myRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
           this.session = doc.data();
           console.log("Sessions", this.session);
-          this.mySessions = myarray.push(this.session);
-          console.log("MySessions", myarray);
+          myarray.push(this.session)
         });
-      });
-    return myarray;
+        observer.next(myarray);
+      })
+      return sessions;
+    });
   }
 
   // Update the user coffee ordered to admin side in booking DB
