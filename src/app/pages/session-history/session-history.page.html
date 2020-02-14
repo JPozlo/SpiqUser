@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-grid *ngIf="history || history.length > 0">
+    <ion-grid *ngIf="(history || history.length > 0); else loading">
       <ion-card *ngFor="let item of history">
         <ion-card-header>
           <ion-card-title class="comfortaa">{{ item.placeBookedName }}</ion-card-title>
@@ -31,16 +31,18 @@
         </ion-card-content>
       </ion-card>
     </ion-grid>
-    <ion-grid *ngIf="!history || history.length === 0">
-      <ion-item [routerLink]="['/tab']" routerLinkActive="router-link-active">
-        <ion-row>
-          <ion-col>
-            <ion-label>
-              Your history is lonely :( <br> Care to try one of our places?
-            </ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-item>
-    </ion-grid>
+    <ng-template #loading>
+      <ion-grid>
+        <ion-item [routerLink]="['/tab']" routerLinkActive="router-link-active">
+          <ion-row>
+            <ion-col>
+              <ion-label>
+                Your history is lonely :( <br> Care to try one of our places?
+              </ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-grid>
+    </ng-template>
   </ion-list>
 </ion-content>

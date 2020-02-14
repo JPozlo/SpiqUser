@@ -1,4 +1,5 @@
 import { NgForm } from "@angular/forms";
+import { OverlayEventDetail } from '@ionic/core'
 import { FirebaseService } from "src/app/services/firebase.service";
 import {
   Contacts,
@@ -25,7 +26,7 @@ export class CoffeePage implements OnInit {
   coffees = [];
   cartItemCount: BehaviorSubject<number>;
 
-  totalPrice;
+  totalPrice = 0;
   priceObserver: Observable<any>;
 
   constructor(
@@ -37,7 +38,7 @@ export class CoffeePage implements OnInit {
     private analysisService: AnalysisCrashService
   ) {
     this.analysisService.setPageName('Coffee');
-    this.firebaseService.getCoffeeTotalPrice().subscribe(val => {
+    this.firebaseService.getCoffeeTotalPrice().subscribe((val: number) => {
       console.log('Value:', val);
       this.totalPrice = val;
     });
@@ -73,11 +74,11 @@ export class CoffeePage implements OnInit {
       component: CartModalPage,
       cssClass: "cart-modal"
     });
-    modal.onDidDismiss().then(data => {
+    modal.onDidDismiss().then((data: OverlayEventDetail<number>) => {
       this.fab.nativeElement.classList.remove("animated", "bounceOutLeft");
       this.animateCSS("bounceInLeft");
-      if (data === 0) {
-        this.totalPrice = data;
+      if (data.data === 0) {
+        this.totalPrice = data.data;
       }
     });
     modal.present();

@@ -7,7 +7,8 @@ import {
   LoadingController,
   AlertController,
   Platform,
-  ModalController
+  ModalController,
+  NavController
 } from "@ionic/angular";
 import { AuthService } from "src/app/services/auth.service";
 import { Observable } from "rxjs";
@@ -41,7 +42,8 @@ export class LoginPage implements OnInit {
     private platform: Platform,
     private google: GooglePlus,
     private userService: UserService,
-    private analysisService: AnalysisCrashService
+    private analysisService: AnalysisCrashService,
+    private navCtrl: NavController
   ) {
     this.analysisService.setPageName('login');
   }
@@ -69,7 +71,7 @@ export class LoginPage implements OnInit {
             this.isLoading = false;
             loadingEl.dismiss();
             this.authService.storeUserAuthDetails(resData);
-            this.router.navigateByUrl("/tab");
+            this.navCtrl.navigateForward('/tab')
           },
           errRes => {
             loadingEl.dismiss();

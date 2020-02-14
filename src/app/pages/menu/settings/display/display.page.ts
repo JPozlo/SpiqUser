@@ -43,6 +43,6 @@ export class DisplayPage implements OnInit {
     function checkToggle(shouldCheck) {
       (toggle as any).checked = shouldCheck;
     }
-    this.myToggleValue = !this.myToggleValue;
+    // this.myToggleValue = !this.myToggleValue;
   }
 }

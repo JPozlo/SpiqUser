@@ -2,7 +2,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "src/app/services/auth.service";
-import { LoadingController, AlertController } from "@ionic/angular";
+import { LoadingController, AlertController, NavController } from "@ionic/angular";
 import { Observable } from "rxjs";
 import { NgForm } from "@angular/forms";
 import { UserService } from "src/app/services/user.service";
@@ -34,6 +34,7 @@ export class RegisterPage implements OnInit {
     private userService: UserService,
     private afStore: AngularFirestore,
     private afAuth: AngularFireAuth,
+    private navctrl: NavController,
     private analysisService: AnalysisCrashService
   ) {
     this.analysisService.setPageName('register');
@@ -82,7 +83,7 @@ export class RegisterPage implements OnInit {
 
             this.isLoading = false;
             loadingEl.dismiss();
-            this.router.navigateByUrl("/tab");
+            this.navctrl.navigateForward('/tab')
           },
           err => {
             loadingEl.dismiss();
