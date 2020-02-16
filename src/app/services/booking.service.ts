@@ -24,6 +24,8 @@ export interface Booking {
   sessionStatus: boolean;
   coffee?;
   finishedBooking: boolean;
+  sessionStartTime?: Date;
+  sessionEndTime?: Date;
 }
 
 @Injectable({
@@ -64,7 +66,9 @@ export class BookingService {
       coffee: [],
       totalCoffeePrice: 0,
       sessionStatus: false,
-      finishedBooking: false
+      finishedBooking: false,
+      sessionStartTime: null,
+      sessionEndTime: null
     };
     return new Promise<any>((resolve, reject) => {
       this.bookingCollection.add(bookingData).then(

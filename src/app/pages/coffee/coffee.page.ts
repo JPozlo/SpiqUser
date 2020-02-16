@@ -27,6 +27,8 @@ export class CoffeePage implements OnInit {
   cartItemCount: BehaviorSubject<number>;
 
   totalPrice = 0;
+  startTime: number;
+  stopTime: number;
   priceObserver: Observable<any>;
 
   constructor(
@@ -42,6 +44,25 @@ export class CoffeePage implements OnInit {
       console.log('Value:', val);
       this.totalPrice = val;
     });
+
+    this.firebaseService.getStartTime().subscribe((sessionData) => {
+      this.startTime = sessionData.toDate().getHours()
+      console.log('Start time in number: ', this.startTime)
+    })
+    this.firebaseService.getEndTime().subscribe((sessionData) => {
+      this.stopTime = sessionData.toDate().getHours()
+      console.log('Stop time in number: ', this.stopTime)
+    })
+
+    console.log('Time difference: ', this.getTimeDifference());
+  }
+
+  getTimeDifference() {
+    let diff = 0;
+    if (this.startTime && this.stopTime != null) {
+      diff = this.stopTime - this.startTime
+    }
+    return diff
   }
 
   showToast(header: string, message: string) {

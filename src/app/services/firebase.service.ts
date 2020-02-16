@@ -20,6 +20,7 @@ import * as firebase from "firebase/app";
 import { map } from "rxjs/operators";
 import { Observable, pipe, BehaviorSubject, of } from "rxjs";
 import { User } from "./user.service";
+import { Timestamp } from '@google-cloud/firestore';
 // import { FieldValue } from "@google-cloud/firestore";
 
 export interface Session {
@@ -39,6 +40,7 @@ export class FirebaseService {
   sessionCollection: AngularFirestoreCollection;
   sessions: Observable<Session[]>;
   session;
+  customSessions: Observable<Session[]>;
   mySessions;
   coffeePrice = 0;
   isUserActive: boolean;
@@ -48,6 +50,9 @@ export class FirebaseService {
   isActive;
   isBook;
   image;
+
+  timeStart;
+  timeStop;
 
   userSessionData;
 
@@ -66,6 +71,28 @@ export class FirebaseService {
     this.isUserActive = false;
 
     this.sessionCollection = this.afStore.collection("sessions");
+    this.customSessions = this.sessionCollection.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data;
+          const id = a.payload.doc.id;
+          const createdBy = a.payload.doc.data().createdBy;
+          const coffeeTotalOrderPrice = a.payload.doc.data().coffeeTotalOrderPrice;
+          const timestampStart = a.payload.doc.data().timestampStart;
+          const timestampEnd = a.payload.doc.data().timestampEnd;
+          const isActive = a.payload.doc.data().isActive;
+          return {
+            id,
+            createdBy,
+            coffeeTotalOrderPrice,
+            timestampStart,
+            timestampEnd,
+            isActive,
+            ...data
+          };
+        });
+      })
+    );
   }
 
   async showAlert(header: string, message: string) {
@@ -76,6 +103,56 @@ export class FirebaseService {
     });
 
     await alert.present();
+  }
+
+  getAllTimes() {
+    return this.customSessions;
+  }
+
+  // Get the hourly total price
+  getStartTime() {
+    const db = firebase.firestore()
+
+    const user = this.authService.getUser();
+    const userID = user.uid;
+
+
+    const myRef = db.collection("sessions")
+      .where("isActive", "==", true)
+      .where("id", "==", userID)
+
+    return new Observable<Timestamp>(observer => {
+      const time = myRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.timeStart = doc.data().timestampStart;
+        });
+        observer.next(this.timeStart);
+      })
+      return time;
+    });
+  }
+
+  getEndTime() {
+    const db = firebase.firestore()
+
+    const user = this.authService.getUser();
+    const userID = user.uid;
+
+
+    const myRef = db.collection("sessions")
+      .where("timestampEnd", "==", !null)
+      .where("id", "==", userID)
+
+    return new Observable<Timestamp>(observer => {
+      const time = myRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.timeStop = doc.data().timestampEnd;
+        });
+        observer.next(this.timeStop);
+      })
+      return time;
+    });
+
   }
 
   // Get history of sessions

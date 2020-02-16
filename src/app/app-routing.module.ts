@@ -16,24 +16,24 @@ const routes: Routes = [
     loadChildren: () =>
       import("./pages/auth/register/register.module").then(
         m => m.RegisterPageModule
-      )
-    // canActivate: [LoginGuard]
+      ),
+    canActivate: [LoginGuard]
   },
   {
     path: "settings",
     loadChildren: () =>
       import("./pages/menu/settings/settings.module").then(
         m => m.SettingsPageModule
-      )
-    // canLoad: [AuthGuard]
+      ),
+    canLoad: [LoginGuard]
   },
   {
     path: "profile",
     loadChildren: () =>
       import("./pages/menu/profile/profile.module").then(
         m => m.ProfilePageModule
-      )
-    // canLoad: [AuthGuard]
+      ),
+    canLoad: [LoginGuard]
   },
   {
     path: "verify-email",
@@ -53,8 +53,8 @@ const routes: Routes = [
   {
     path: "tab",
     loadChildren: () =>
-      import("./pages/tab/tab.module").then(m => m.TabPageModule)
-    // canLoad: [AuthGuard]
+      import("./pages/tab/tab.module").then(m => m.TabPageModule),
+    canLoad: [LoginGuard]
   },
   {
     path: "phoneauth",
@@ -84,14 +84,16 @@ const routes: Routes = [
     loadChildren: () =>
       import("./pages/placeslistmodal/placeslistmodal.module").then(
         m => m.PlaceslistmodalPageModule
-      )
+      ),
+    canLoad: [LoginGuard]
   },
   {
     path: "session-history",
     loadChildren: () =>
       import("./pages/session-history/session-history.module").then(
         m => m.SessionHistoryPageModule
-      )
+      ),
+    canLoad: [LoginGuard]
   }
 ];
 

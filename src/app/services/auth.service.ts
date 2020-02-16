@@ -20,18 +20,12 @@ import { AngularFireAuth } from "@angular/fire/auth";
 
 import { Storage } from "@ionic/storage";
 import { GooglePlus } from "@ionic-native/google-plus/ngx";
-import { Facebook, FacebookLoginResponse } from "@ionic-native/facebook/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
 
 import * as firebase from "firebase/app";
 import { FirebaseService } from "./firebase.service";
 import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 
-// export interface MyUser {
-//   id: Observable<string>;
-//   email: Observable<string>;
-//   tokenId: Observable<string>;
-// }
 
 export const USER_DETAILS = "UserDetails";
 
@@ -57,7 +51,6 @@ export class AuthService implements OnDestroy {
     private router: Router,
     private storage: Storage,
     private nativeStorage: NativeStorage,
-    private fb: Facebook,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
