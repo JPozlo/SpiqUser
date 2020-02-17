@@ -26,12 +26,17 @@ export class PlaceslistmodalPage implements OnInit {
     "ChIJCz3xipsQLxgRHZdNqnea670" // Prestige
   ]; //place_id
 
+  customAreas: Array<any> = [
+    "ChIJC4gm9aEQLxgRrKHdf2wTiGg" // Adlife
+  ]
+
   // @Input() places;
   placesList: [];
   filteredPlace: any;
   filteredPlaceName: string;
   filteredPlacesList = [];
   thePlacesList = [];
+  place: any;
   myplaceList = [];
 
   constructor(
@@ -42,17 +47,16 @@ export class PlaceslistmodalPage implements OnInit {
     private analysisService: AnalysisCrashService
   ) {
     this.analysisService.setPageName('Place Booking Modal');
-    this.placesList = this.navParams.get("places");
+    this.place = this.navParams.get("places");
     console.log(this.placesList);
-    this.thePlacesList = this.filterPlaces();
   }
 
   ngOnInit() { }
 
   filterPlaces() {
     for (let i = 0; i < this.placesList.length; i++) {
-      if (this.quietareas.includes(this.placesList[i]["place_id"])) {
-        this.filteredPlaceName = this.placesList[i]["name"];
+      if (this.customAreas.includes(this.placesList[i]["place_id"])) {
+        this.filteredPlaceName = this.placesList[i]["name"] + "SPIQ";
         this.filteredPlace = this.placesList[i];
         console.log("The filtered places are", this.filteredPlace);
         this.filteredPlacesList.push(this.filteredPlace);

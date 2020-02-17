@@ -57,7 +57,7 @@ export class BookingService {
     ).toString();
     const bookingData = {
       placeBookedID,
-      placeBookedName,
+      placeBookedName: placeBookedName + ' SPIQ',
       actualBookingID: uniqueBookingID,
       userBookingID: currentUser.uid,
       userBookingName: currentUser.displayName,
@@ -67,7 +67,7 @@ export class BookingService {
       totalCoffeePrice: 0,
       sessionStatus: false,
       finishedBooking: false,
-      sessionStartTime: null,
+      sessionStartTime: new Date(),
       sessionEndTime: null
     };
     return new Promise<any>((resolve, reject) => {

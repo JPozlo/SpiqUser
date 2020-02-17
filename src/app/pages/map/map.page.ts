@@ -64,21 +64,13 @@ export class MapPage implements OnInit, OnDestroy {
 
   places: Array<any>;
   filteredPlacesID: Array<any>;
-  quietareas: Array<any> = [
-    "ChIJtS505UoULxgR0QkaBPgw5u4",
-    "ChIJszXorvATLxgRcEdpiGxpC0c",
-    "ChIJRwyS5cQFLxgRwZ9Hpl27bHc",
-    "ChIJhU-1PsMFLxgRH8MIe-BFkss",
-    "ChIJLR5-zBEaLxgRgwSwoR30RII",
-    "ChIJYWiy8bYWLxgRlMmbprKj0ms",
-    "ChIJg-zl1IUULxgRKXSci3hn8UQ",
-    "ChIJI5xZhDoRLxgRJEVADPWnciw"
-  ]; //place_id
 
   placeIdentifier: string;
   placeName: string;
 
   private URL = "assets/data.json";
+
+  quietareas = "ChIJC4gm9aEQLxgRrKHdf2wTiGg"
 
   private lat;
   private long;
@@ -169,13 +161,13 @@ export class MapPage implements OnInit, OnDestroy {
 
   bookingPlace() {
     this.getLibraries(this.currentPosition).then(
-      (results: Array<any>) => {
-        this.places = results;
-        console.log("Places array: ", this.places);
-        this.filteredPlacesID = results.map(function (value, index) {
-          return value.place_id;
-        });
-        console.log("The filtered places ID are: ", this.filteredPlacesID);
+      (results) => {
+        // this.places = results
+        // console.log("Places array: ", this.places);
+        // this.filteredPlacesID = results.map(function (value, index) {
+        //   return value.place_id;
+        // });
+        console.log("The filtered places ID are: ", results);
         // for (let i = 0; i < results.length; i++) {
         //   if (this.quietareas.includes(results[i]["place_id"])) {
         //     this.placeIdentifier = results[i]["id"];
@@ -186,7 +178,7 @@ export class MapPage implements OnInit, OnDestroy {
         //     console.log("Created marker successfully!", results[i]);
         //   }
         // }
-        this.openPlacesList(this.places);
+        this.openPlacesList(results);
       },
       status => console.log(status)
     );
@@ -255,15 +247,17 @@ export class MapPage implements OnInit, OnDestroy {
   getLibraries(latLng) {
     var service = new google.maps.places.PlacesService(this.map);
     let request = {
-      location: latLng,
-      radius: "4047",
-      types: ["shopping_mall"],
+      placeId: "ChIJC4gm9aEQLxgRrKHdf2wTiGg",
+      fields: ['name', 'formatted_address', 'place_id', 'geometry', 'id'],
+      // radius: "4058",
+      // types: ["shopping_mall"],
       key: "AIzaSyBkv2XkDpOFVZ1NMaI2pW3p-syAK3D0ZHc"
     };
     return new Promise((resolve, reject) => {
-      service.nearbySearch(request, function (results, status) {
+      service.getDetails(request, function (place, status) {
+        console.log('Results', place)
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          resolve(results);
+          resolve(place)
         } else {
           reject(status);
         }
