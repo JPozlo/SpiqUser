@@ -39,6 +39,7 @@ import { Facebook } from "@ionic-native/facebook/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
 import { Network } from "@ionic-native/network/ngx";
 import { OneSignal } from "@ionic-native/onesignal/ngx";
+import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireModule } from "@angular/fire";
@@ -95,6 +96,7 @@ import { BookingService } from "./services/booking.service";
     LocationAccuracy,
     NativeGeocoder,
     OneSignal,
+    EmailComposer,
     FirebaseX,
     FirebaseAnalytics,
     FirebaseAuthentication,

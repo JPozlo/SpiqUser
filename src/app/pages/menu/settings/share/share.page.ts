@@ -16,8 +16,11 @@ export class SharePage implements OnInit {
   ngOnInit() {
   }
 
-  sendShare(message, subject, url) {
-    this.socialSharing.share(message, subject, url);
+  sendShare() {
+    const message = "Check out this awesome app, SPIQ, that I have been using!"
+    const subject = "SPIQ App Sharing"
+    const URL = "https://mapsdemoone.web.app/"
+    this.socialSharing.share(message, subject, URL);
 
   }
 

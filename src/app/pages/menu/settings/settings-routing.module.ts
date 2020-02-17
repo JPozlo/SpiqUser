@@ -21,6 +21,7 @@ const routes: Routes = [
     loadChildren: () => import('./share/share.module').then(m => m.SharePageModule)
   }
 
+
 ];
 
 @NgModule({

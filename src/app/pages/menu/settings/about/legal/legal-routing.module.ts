@@ -7,7 +7,15 @@ const routes: Routes = [
   {
     path: '',
     component: LegalPage
+  },  {
+    path: 'privacy-policy',
+    loadChildren: () => import('./privacy-policy/privacy-policy.module').then( m => m.PrivacyPolicyPageModule)
+  },
+  {
+    path: 'terms-conditions',
+    loadChildren: () => import('./terms-conditions/terms-conditions.module').then( m => m.TermsConditionsPageModule)
   }
+
 ];
 
 @NgModule({

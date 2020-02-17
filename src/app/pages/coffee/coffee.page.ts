@@ -9,7 +9,7 @@ import {
 } from "@ionic-native/contacts/ngx";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { CoffeeService } from "./../../services/coffee.service";
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { ModalController, ToastController } from "@ionic/angular";
 import { CartModalPage } from "./cart-modal/cart-modal.page";
 import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
@@ -19,7 +19,7 @@ import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
   templateUrl: "./coffee.page.html",
   styleUrls: ["./coffee.page.scss"]
 })
-export class CoffeePage implements OnInit {
+export class CoffeePage implements OnInit, OnDestroy {
   @ViewChild("cart", { static: false, read: ElementRef }) fab: ElementRef;
 
   cart = [];
@@ -55,6 +55,14 @@ export class CoffeePage implements OnInit {
     })
 
     console.log('Time difference: ', this.getTimeDifference());
+  }
+
+  onDidDismiss() {
+    this.totalPrice = 0
+  }
+
+  ngOnDestroy() {
+    this.totalPrice = 0
   }
 
   getTimeDifference() {

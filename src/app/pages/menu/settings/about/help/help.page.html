@@ -7,9 +7,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="comfortaa">
   <div class="align-items-center">
-    <p>If you have a problem or any question to ask, just take a loook at our website or contact us through email.</p>
+    <ion-grid>
+      <ion-row>
+        <ion-col size-md="6" offset-md="3">
+          <p>If you have a problem or any question to ask, just take a loook at our website or contact us through email.
+          </p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
   <div>
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">

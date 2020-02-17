@@ -9,15 +9,15 @@
 
 <ion-content>
   <ion-list>
-    <ion-item>
+    <ion-item [routerLink]="[ '/settings/about/legal/terms-conditions' ]" routerLinkActive="active">
       <ion-label>Terms of Service</ion-label>
     </ion-item>
-    <ion-item>
+    <ion-item [routerLink]="[ '/settings/about/legal/privacy-policy' ]" routerLinkActive="active">
       <ion-label>Privacy Policy</ion-label>
     </ion-item>
-    <ion-item>
+    <!-- <ion-item>
       <ion-label>Legal Notices</ion-label>
-    </ion-item>
+    </ion-item> -->
   </ion-list>
 
 </ion-content>

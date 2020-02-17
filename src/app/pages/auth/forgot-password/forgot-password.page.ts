@@ -45,8 +45,8 @@ export class ForgotPasswordPage implements OnInit {
   async showToast(message) {
     const toast = await this.toastCtrl.create({
       message,
-      duration: 2500,
-      position: 'bottom'
+      duration: 3500,
+      position: 'top'
     });
     await toast.present();
   }
