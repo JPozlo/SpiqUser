@@ -1,5 +1,5 @@
 import { NgForm } from "@angular/forms";
-import { OverlayEventDetail } from '@ionic/core'
+import { OverlayEventDetail } from "@ionic/core";
 import { FirebaseService } from "src/app/services/firebase.service";
 import {
   Contacts,
@@ -9,10 +9,16 @@ import {
 } from "@ionic-native/contacts/ngx";
 import { BehaviorSubject, Observable, of } from "rxjs";
 import { CoffeeService } from "./../../services/coffee.service";
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy
+} from "@angular/core";
 import { ModalController, ToastController } from "@ionic/angular";
 import { CartModalPage } from "./cart-modal/cart-modal.page";
-import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
+import { AnalysisCrashService } from "src/app/services/analysis-crash.service";
 
 @Component({
   selector: "app-coffee",
@@ -39,38 +45,27 @@ export class CoffeePage implements OnInit, OnDestroy {
     private firebaseService: FirebaseService,
     private analysisService: AnalysisCrashService
   ) {
-    this.analysisService.setPageName('Coffee');
+    this.analysisService.setPageName("Coffee");
     this.firebaseService.getCoffeeTotalPrice().subscribe((val: number) => {
-      console.log('Value:', val);
+      console.log("Value:", val);
       this.totalPrice = val;
     });
-
-    this.firebaseService.getStartTime().subscribe((sessionData) => {
-      this.startTime = sessionData.toDate().getHours()
-      console.log('Start time in number: ', this.startTime)
-    })
-    this.firebaseService.getEndTime().subscribe((sessionData) => {
-      this.stopTime = sessionData.toDate().getHours()
-      console.log('Stop time in number: ', this.stopTime)
-    })
-
-    console.log('Time difference: ', this.getTimeDifference());
   }
 
   onDidDismiss() {
-    this.totalPrice = 0
+    this.totalPrice = 0;
   }
 
   ngOnDestroy() {
-    this.totalPrice = 0
+    this.totalPrice = 0;
   }
 
   getTimeDifference() {
     let diff = 0;
     if (this.startTime && this.stopTime != null) {
-      diff = this.stopTime - this.startTime
+      diff = this.stopTime - this.startTime;
     }
-    return diff
+    return diff;
   }
 
   showToast(header: string, message: string) {
