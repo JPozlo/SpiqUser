@@ -1,4 +1,4 @@
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { Place } from "./../place.model";
 import { AlertController } from "@ionic/angular";
 import { AdminService } from "src/app/services/admin.service";
@@ -12,7 +12,10 @@ import { Injectable } from "@angular/core";
 import { UniqueDeviceID } from "@ionic-native/unique-device-id/ngx";
 import { uuid } from "uuid";
 
+import * as firebase from "firebase/app";
+
 export interface Booking {
+  bookingID: String;
   placeBookedID;
   placeBookedName;
   actualBookingID;
@@ -57,7 +60,7 @@ export class BookingService {
     ).toString();
     const bookingData = {
       placeBookedID,
-      placeBookedName: placeBookedName + ' SPIQ',
+      placeBookedName: placeBookedName + " SPIQ",
       actualBookingID: uniqueBookingID,
       userBookingID: currentUser.uid,
       userBookingName: currentUser.displayName,
@@ -68,11 +71,13 @@ export class BookingService {
       sessionStatus: false,
       finishedBooking: false,
       sessionStartTime: new Date(),
-      sessionEndTime: null
+      sessionEndTime: null,
+      bookingID: uniqueBookingID
     };
     return new Promise<any>((resolve, reject) => {
       this.bookingCollection.add(bookingData).then(
         res => {
+          this.modifySeatsAvailable(bookingData.placeBookedID);
           this.showAlert(
             "Booked",
             `You have booked ${placeBookedName} successfully! and your booking id is ${uniqueBookingID}`
@@ -85,6 +90,87 @@ export class BookingService {
         }
       );
     }).catch(err => this.showAlert("Error", `${err}`));
+  }
+
+  modifyOnePlace() {
+    const db = firebase.firestore();
+    const placesRef = db.collection("places");
+    placesRef
+      .get()
+      .then(snap => {
+        snap.forEach(doc => {
+          const seats = doc.data().seatsFree - 1;
+          const docRef = db.collection("places").doc(doc.id);
+          docRef.set(
+            {
+              seatsFree: seats
+            },
+            { merge: true }
+          );
+        });
+      })
+      .catch(err => console.log(err));
+  }
+
+  modifySeatsAvailable(placeID) {
+    const db = firebase.firestore();
+    const placesRef = db.collection("places").where("placeID", "==", placeID);
+    placesRef
+      .get()
+      .then(snap => {
+        snap.forEach(doc => {
+          const seats = doc.data().seatsFree - 1;
+          const docRef = db.collection("places").doc(doc.id);
+          docRef.set(
+            {
+              seatsFree: seats
+            },
+            { merge: true }
+          );
+        });
+      })
+      .catch(err => console.log(err));
+  }
+
+  checkFreeSeats(placeID) {
+    const db = firebase.firestore();
+    const placesRef = db.collection("places").where("placeID", "==", placeID);
+    let seatStatus: boolean;
+
+    return new Observable<boolean>(observer => {
+      const status = placesRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const seats = doc.data().seatsFree;
+          if (seats > 0) {
+            seatStatus = true;
+          } else {
+            seatStatus = false;
+          }
+        });
+        observer.next(seatStatus);
+      });
+      return status;
+    });
+  }
+  checkFreeSeatsOnePlace() {
+    const db = firebase.firestore();
+    const placesRef = db.collection("places");
+    let seatStatus: boolean;
+
+    return new Observable<boolean>(observer => {
+      const status = placesRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const seats = doc.data().seatsFree;
+          if (seats == 0) {
+            seatStatus = false;
+          } else {
+            seatStatus = true;
+          }
+        });
+        observer.next(seatStatus);
+      });
+      return status;
+    });
   }
 
   async showAlert(header: string, message: string) {

@@ -31,6 +31,8 @@ export interface Session {
   timestampEnd?: Timestamp;
   isActive: boolean;
   placeBookedName: String;
+  finalPriceSet: boolean;
+  totalPrice: number;
 }
 
 @Injectable({
@@ -84,6 +86,8 @@ export class FirebaseService {
           const timestampEnd = a.payload.doc.data().timestampEnd;
           const isActive = a.payload.doc.data().isActive;
           const placeBookedName = a.payload.doc.data().placeBookedName;
+          const totalPrice = a.payload.doc.data().totalPrice;
+          const finalPriceSet = a.payload.doc.data().finalPriceSet;
           return {
             id,
             createdBy,
@@ -92,6 +96,8 @@ export class FirebaseService {
             timestampEnd,
             isActive,
             placeBookedName,
+            totalPrice,
+            finalPriceSet,
             ...data
           };
         });
@@ -227,6 +233,9 @@ export class FirebaseService {
     const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
+    // let timestart: Timestamp;
+    // timestart.toDate().getMinutes();
+
     db.collection("sessions")
       .where("isActive", "==", true)
       .where("id", "==", userID)

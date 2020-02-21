@@ -2,10 +2,11 @@ import { BookingService } from "./../../services/booking.service";
 import {
   ModalController,
   NavParams,
-  ActionSheetController
+  ActionSheetController,
+  AlertController
 } from "@ionic/angular";
 import { Component, OnInit, Input } from "@angular/core";
-import { AnalysisCrashService } from 'src/app/services/analysis-crash.service';
+import { AnalysisCrashService } from "src/app/services/analysis-crash.service";
 
 @Component({
   selector: "app-placeslistmodal",
@@ -28,7 +29,7 @@ export class PlaceslistmodalPage implements OnInit {
 
   customAreas: Array<any> = [
     "ChIJC4gm9aEQLxgRrKHdf2wTiGg" // Adlife
-  ]
+  ];
 
   // @Input() places;
   placesList: [];
@@ -39,19 +40,26 @@ export class PlaceslistmodalPage implements OnInit {
   place: any;
   myplaceList = [];
 
+  freeSeatStatus: boolean;
+
   constructor(
     private modalCtrl: ModalController,
     private navParams: NavParams,
     private actionSheetCtrl: ActionSheetController,
     private bookingService: BookingService,
-    private analysisService: AnalysisCrashService
+    private analysisService: AnalysisCrashService,
+    private alertCtrl: AlertController
   ) {
-    this.analysisService.setPageName('Place Booking Modal');
+    this.analysisService.setPageName("Place Booking Modal");
     this.place = this.navParams.get("places");
     console.log(this.placesList);
+    this.bookingService.checkFreeSeatsOnePlace().subscribe(res => {
+      console.log(`Status of seats: ${res}`);
+      this.freeSeatStatus = res;
+    });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   filterPlaces() {
     for (let i = 0; i < this.placesList.length; i++) {
@@ -66,11 +74,26 @@ export class PlaceslistmodalPage implements OnInit {
   }
 
   book(placeID, placeName) {
-    this.presentActionSheet(placeID, placeName);
+    if (this.freeSeatStatus) {
+      this.presentActionSheet(placeID, placeName);
+    } else {
+      this.showAlert(
+        `Sorry, ${placeName} is fully booked`,
+        "You can try one of our other places"
+      );
+    }
   }
 
   closeModal() {
     this.modalCtrl.dismiss();
+  }
+
+  showAlert(header: string, message: string) {
+    this.alertCtrl
+      .create({ header, message, buttons: ["OK"] })
+      .then(alertEl => {
+        alertEl.present();
+      });
   }
 
   async presentActionSheet(placeId, placeName) {

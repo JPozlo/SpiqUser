@@ -57,26 +57,53 @@ exports.sessionEnded = functions.firestore
   .document("/sessions/{sessionId}")
   .onUpdate((change, context) => {
     price = 0;
-    totalprice = 0;
+    thetotalprice = 0;
     const allValues = change.before.data();
     const sessionId = context.params.sessionId;
     const status = change.after.data().isActive;
     const sessionCreatedBy = allValues.createdBy;
     // const uid = context.auth.uid;
     const userID = change.after.data().id;
-    const sessionStartTime = change.after.data().timestampStart;
-    const sessionEndTime = change.after.data().timestampEnd;
     const coffeePrice = change.after.data().coffeeTotalOrderPrice;
-    var hourStart = sessionStartTime.toDate().getMinutes();
-    var hourEnd = sessionEndTime.toDate().getMinutes();
-    var timeDifference = hourEnd - hourStart;
+    const sessionStartTime = change.after.data().timestampStart;
 
-    if (timeDifference < 1) {
-      price = 100;
-    } else if (timeDifference > 1) {
-      price = timeDifference * 100;
+    function setFinalPrice(price) {
+      const sessionCollectionRef = admin
+        .firestore()
+        .collection("sessions")
+        .where("id", "==", userID)
+        .where("finalPriceSet", "==", false);
+      const updateSession = sessionCollectionRef.get().then(
+        snap => {
+          snap.forEach(doc => {
+            const docRef = admin
+              .firestore()
+              .collection("sessions")
+              .doc(doc.id);
+            docRef
+              .set(
+                {
+                  totalPrice: price,
+                  finalPriceSet: true
+                },
+                { merge: true }
+              )
+              .then(res => {
+                console.log("Total price update successful");
+                return res;
+              })
+              .catch(err => {
+                console.log(`Total price update failed: ${err}`);
+                return err;
+              });
+          });
+          return null;
+        },
+        err => console.log(`Error getting session collection reference: ${err}`)
+      );
+      return updateSession;
     }
-    totalprice = price + coffeePrice;
+
     // admin
     //     .auth()
     //     .getUser(uid)
@@ -86,6 +113,16 @@ exports.sessionEnded = functions.firestore
       msg = console.log("No Token Found");
       return msg;
     } else {
+      const sessionEndTime = change.after.data().timestampEnd;
+
+      var hourStart = sessionStartTime.seconds / 3600;
+      var hourEnd = sessionEndTime.seconds / 3600;
+      var timeDifference = Math.ceil(hourEnd - hourStart);
+      console.log("Time difference in hours", timeDifference);
+      price = timeDifference * 100;
+      thetotalprice = price + coffeePrice;
+      setFinalPrice(thetotalprice);
+
       const devicesCollectionRef = admin
         .firestore()
         .collection("userDevices")
@@ -96,11 +133,11 @@ exports.sessionEnded = functions.firestore
           const payload = {
             notification: {
               title: `Session finished`,
-              body: `Your session has been terminated & total price is ${totalprice}`,
+              body: `Your session has been terminated & total price is KSH ${thetotalprice}.00`,
               sound: "default"
             },
             data: {
-              notification_body: `Your session has been terminated & total price is ${totalprice}`,
+              notification_body: `Your session has been terminated & total price is KSH ${thetotalprice}.00`,
               notification_title: "Session finished",
               notification_android_visibility: "1",
               notification_android_priority: "1"
