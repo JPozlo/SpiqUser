@@ -20,16 +20,17 @@ import * as firebase from "firebase/app";
 import { map } from "rxjs/operators";
 import { Observable, pipe, BehaviorSubject, of } from "rxjs";
 import { User } from "./user.service";
-import { Timestamp } from '@google-cloud/firestore';
+import { Timestamp } from "@google-cloud/firestore";
 // import { FieldValue } from "@google-cloud/firestore";
 
 export interface Session {
   id: string;
   createdBy: string;
   coffeeTotalOrderPrice?: number;
-  timestampStart: Date;
-  timestampEnd?: Date;
+  timestampStart: Timestamp;
+  timestampEnd?: Timestamp;
   isActive: boolean;
+  placeBookedName: String;
 }
 
 @Injectable({
@@ -77,10 +78,12 @@ export class FirebaseService {
           const data = a.payload.doc.data;
           const id = a.payload.doc.id;
           const createdBy = a.payload.doc.data().createdBy;
-          const coffeeTotalOrderPrice = a.payload.doc.data().coffeeTotalOrderPrice;
+          const coffeeTotalOrderPrice = a.payload.doc.data()
+            .coffeeTotalOrderPrice;
           const timestampStart = a.payload.doc.data().timestampStart;
           const timestampEnd = a.payload.doc.data().timestampEnd;
           const isActive = a.payload.doc.data().isActive;
+          const placeBookedName = a.payload.doc.data().placeBookedName;
           return {
             id,
             createdBy,
@@ -88,6 +91,7 @@ export class FirebaseService {
             timestampStart,
             timestampEnd,
             isActive,
+            placeBookedName,
             ...data
           };
         });
@@ -111,15 +115,15 @@ export class FirebaseService {
 
   // Get the hourly total price
   getStartTime() {
-    const db = firebase.firestore()
+    const db = firebase.firestore();
 
     const user = this.authService.getUser();
     const userID = user.uid;
 
-
-    const myRef = db.collection("sessions")
+    const myRef = db
+      .collection("sessions")
       .where("isActive", "==", true)
-      .where("id", "==", userID)
+      .where("id", "==", userID);
 
     return new Observable<Timestamp>(observer => {
       const time = myRef.onSnapshot(querySnapshot => {
@@ -127,21 +131,21 @@ export class FirebaseService {
           this.timeStart = doc.data().timestampStart;
         });
         observer.next(this.timeStart);
-      })
+      });
       return time;
     });
   }
 
   getEndTime() {
-    const db = firebase.firestore()
+    const db = firebase.firestore();
 
     const user = this.authService.getUser();
     const userID = user.uid;
 
-
-    const myRef = db.collection("sessions")
+    const myRef = db
+      .collection("sessions")
       .where("timestampEnd", "==", !null)
-      .where("id", "==", userID)
+      .where("id", "==", userID);
 
     return new Observable<Timestamp>(observer => {
       const time = myRef.onSnapshot(querySnapshot => {
@@ -149,10 +153,9 @@ export class FirebaseService {
           this.timeStop = doc.data().timestampEnd;
         });
         observer.next(this.timeStop);
-      })
+      });
       return time;
     });
-
   }
 
   // Get history of sessions
@@ -173,10 +176,10 @@ export class FirebaseService {
         querySnapshot.forEach(doc => {
           this.session = doc.data();
           console.log("Sessions", this.session);
-          myarray.push(this.session)
+          myarray.push(this.session);
         });
         observer.next(myarray);
-      })
+      });
       return sessions;
     });
   }
@@ -205,18 +208,17 @@ export class FirebaseService {
               { merge: true }
             )
             .then(merged => {
-              console.log('Success', `Updated coffee price successfuly`); // Replace with crashlytics data
+              console.log("Success", `Updated coffee price successfuly`); // Replace with crashlytics data
             })
             .catch(err => {
-              console.log('Success', `Updated coffee price successfuly`)
-              this.showAlert('Error', `${err}`);
-            }
-            );
+              console.log("Success", `Updated coffee price successfuly`);
+              this.showAlert("Error", `${err}`);
+            });
         });
       })
       .catch(err => {
-        console.log('Success', `Updated coffee price successfuly`);
-        this.showAlert('Error', `${err}`);
+        console.log("Success", `Updated coffee price successfuly`);
+        this.showAlert("Error", `${err}`);
       });
   }
 
@@ -268,7 +270,7 @@ export class FirebaseService {
     const user = this.authService.getUser();
     const userID = user.uid;
 
-    const myRef = db.collection('users').where('id', '==', userID);
+    const myRef = db.collection("users").where("id", "==", userID);
     return new Observable<boolean>(observer => {
       const status = myRef.onSnapshot(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -278,7 +280,6 @@ export class FirebaseService {
       });
       return status;
     });
-
   }
 
   // Get the total coffee price for displaying to the user
@@ -287,7 +288,8 @@ export class FirebaseService {
     const user = this.authService.getUser();
     const userID = user.uid;
 
-    const myRef = db.collection("bookings")
+    const myRef = db
+      .collection("bookings")
       .where("userBookingID", "==", userID)
       .where("finishedBooking", "==", false)
       .where("sessionStatus", "==", true);
@@ -298,7 +300,7 @@ export class FirebaseService {
           this.coffeePrice = doc.data().totalCoffeePrice;
         });
         observer.next(this.coffeePrice);
-      })
+      });
       return price;
     });
   }
@@ -308,7 +310,7 @@ export class FirebaseService {
       let storageRef = firebase.storage().ref();
       let mydownloadURL = storageRef.getDownloadURL();
       let imageRef = storageRef.child("image").child("imageName");
-      this.encodeImageUri(imageURI, function (image64) {
+      this.encodeImageUri(imageURI, function(image64) {
         imageRef.putString(image64, "data_url").then(
           snapshot => {
             const tokenId = this.authService.getUser().subscribe(data => {
@@ -338,7 +340,7 @@ export class FirebaseService {
     var c = document.createElement("canvas");
     var ctx = c.getContext("2d");
     var img = new Image();
-    img.onload = function () {
+    img.onload = function() {
       var aux: any = this;
       c.width = aux.width;
       c.height = aux.height;

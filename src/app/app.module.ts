@@ -1,4 +1,4 @@
-import { environment } from "./../environments/environment";
+import { environment } from "./../environments/environment.prod";
 import { CartModalPageModule } from "./pages/coffee/cart-modal/cart-modal.module";
 import { WebView } from "@ionic-native/ionic-webview/ngx";
 import { UniqueDeviceID } from "@ionic-native/unique-device-id/ngx";
@@ -39,7 +39,7 @@ import { Facebook } from "@ionic-native/facebook/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
 import { Network } from "@ionic-native/network/ngx";
 import { OneSignal } from "@ionic-native/onesignal/ngx";
-import { EmailComposer } from '@ionic-native/email-composer/ngx';
+import { EmailComposer } from "@ionic-native/email-composer/ngx";
 
 import { AngularFireStorageModule } from "@angular/fire/storage";
 import { AngularFireModule } from "@angular/fire";
@@ -52,6 +52,7 @@ import {
 import { HttpClientModule } from "@angular/common/http";
 import { AuthService } from "./services/auth.service";
 import { BookingService } from "./services/booking.service";
+import { OfflineredirectmodalPageModule } from "./pages/offlineredirectmodal/offlineredirectmodal.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -67,7 +68,8 @@ import { BookingService } from "./services/booking.service";
     AngularFireAuthModule,
     AngularFireStorageModule,
     CartModalPageModule,
-    PlaceslistmodalPageModule
+    PlaceslistmodalPageModule,
+    OfflineredirectmodalPageModule
   ],
   providers: [
     StatusBar,
@@ -106,4 +108,4 @@ import { BookingService } from "./services/booking.service";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

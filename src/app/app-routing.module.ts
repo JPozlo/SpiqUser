@@ -94,7 +94,12 @@ const routes: Routes = [
         m => m.SessionHistoryPageModule
       ),
     canLoad: [LoginGuard]
+  },
+  {
+    path: 'offlineredirectmodal',
+    loadChildren: () => import('./pages/offlineredirectmodal/offlineredirectmodal.module').then(m => m.OfflineredirectmodalPageModule)
   }
+
 ];
 
 @NgModule({

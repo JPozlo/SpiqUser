@@ -1,4 +1,4 @@
-import { environment } from "./../../environments/environment";
+import { environment } from "./../../environments/environment.prod";
 import {
   AlertController,
   Platform,
@@ -25,7 +25,6 @@ import { NativeStorage } from "@ionic-native/native-storage/ngx";
 import * as firebase from "firebase/app";
 import { FirebaseService } from "./firebase.service";
 import { FirebaseX } from "@ionic-native/firebase-x/ngx";
-
 
 export const USER_DETAILS = "UserDetails";
 
@@ -68,7 +67,7 @@ export class AuthService implements OnDestroy {
   private user: firebase.User;
   private activeLogoutTimer: any;
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
 
   // Pipe first value emitted and convert to promise
   isUserLoggedIn() {

@@ -16,11 +16,13 @@ import {
   MenuController,
   ActionSheetController,
   AlertController,
-  NavController
+  NavController,
+  ModalController
 } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
-import { FirebaseAnalytics } from '@ionic-native/firebase-analytics/ngx';
+import { FirebaseAnalytics } from "@ionic-native/firebase-analytics/ngx";
+import { OfflineredirectmodalPage } from "./pages/offlineredirectmodal/offlineredirectmodal.page";
 
 @Component({
   selector: "app-root",
@@ -49,12 +51,13 @@ export class AppComponent implements OnInit, OnDestroy {
     private network: Network,
     private alertCtrl: AlertController,
     private firebaseAnalytics: FirebaseAnalytics,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private modalCtrl: ModalController
   ) {
     this.initializeApp();
     this.networkService.disconnected().subscribe(
       res => {
-        this.showToast("No Internet!", "Connect to wifi or mobile network.");
+        this.openOfflineModal();
       },
       err => this.showToast("Error", `${err}`)
     );
@@ -62,16 +65,29 @@ export class AppComponent implements OnInit, OnDestroy {
     this.afAuth.auth.onAuthStateChanged(user => {
       if (user) {
         this.firebaseAnalytics.setUserId(user.uid);
-        this.firebaseAnalytics.setUserProperty('name', user.displayName);
-        this.firebaseAnalytics.setUserProperty('email', user.email);
-        this.firebaseAnalytics.setUserProperty('phone number', user.phoneNumber);
-        this.firebaseAnalytics.setUserProperty('photo', user.photoURL);
-        this.navCtrl.navigateRoot('/tab')
+        this.firebaseAnalytics.setUserProperty("name", user.displayName);
+        this.firebaseAnalytics.setUserProperty("email", user.email);
+        this.firebaseAnalytics.setUserProperty(
+          "phone number",
+          user.phoneNumber
+        );
+        this.firebaseAnalytics.setUserProperty("photo", user.photoURL);
+        this.navCtrl.navigateRoot("/tab");
         this.watchToken();
       } else {
-        this.navCtrl.navigateRoot('/login')
+        this.navCtrl.navigateRoot("/login");
       }
     });
+  }
+
+  async openOfflineModal() {
+    let modal = await this.modalCtrl.create({
+      component: OfflineredirectmodalPage
+    });
+    modal.onDidDismiss().then(data => {
+      console.log(data.data);
+    });
+    modal.present();
   }
 
   ngOnInit() {
@@ -141,7 +157,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {}
 
   showAlert(title, message) {
     this.alertCtrl
