@@ -56,7 +56,8 @@ export class CartModalPage implements OnInit {
   }
 
   close() {
-    this.modalCtrl.dismiss(this.totalPrice);
+    this.coffeeService.resetCart();
+    this.modalCtrl.dismiss();
   }
 
   async checkout() {

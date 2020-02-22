@@ -67,7 +67,7 @@ exports.sessionEnded = functions.firestore
     const coffeePrice = change.after.data().coffeeTotalOrderPrice;
     const sessionStartTime = change.after.data().timestampStart;
 
-    function setFinalPrice(price) {
+    function setFinalPrice(price, time) {
       const sessionCollectionRef = admin
         .firestore()
         .collection("sessions")
@@ -83,6 +83,7 @@ exports.sessionEnded = functions.firestore
             docRef
               .set(
                 {
+                  totalHours: time,
                   totalPrice: price,
                   finalPriceSet: true
                 },
@@ -121,7 +122,7 @@ exports.sessionEnded = functions.firestore
       console.log("Time difference in hours", timeDifference);
       price = timeDifference * 100;
       thetotalprice = price + coffeePrice;
-      setFinalPrice(thetotalprice);
+      setFinalPrice(thetotalprice, timeDifference);
 
       const devicesCollectionRef = admin
         .firestore()

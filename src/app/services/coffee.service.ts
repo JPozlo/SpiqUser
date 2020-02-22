@@ -17,10 +17,10 @@ export class CoffeeService {
   totalPrice;
 
   data: Coffee[] = [
-    { id: 0, name: 'Cappuchino Large', price: 100, amount: 1 },
-    { id: 1, name: 'Expresso Large', price: 100, amount: 1 },
-    { id: 2, name: 'Cappuchino Medium', price: 100, amount: 1 },
-    { id: 3, name: 'Expresso Medium', price: 100, amount: 1 }
+    { id: 0, name: 'Cappuchino Large', price: 100, amount: 0 },
+    { id: 1, name: 'Expresso Large', price: 100, amount: 0 },
+    { id: 2, name: 'Cappuchino Medium', price: 100, amount: 0 },
+    { id: 3, name: 'Expresso Medium', price: 100, amount: 0 }
   ];
 
   private cart = [];

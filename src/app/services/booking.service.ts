@@ -58,10 +58,10 @@ export class BookingService {
     let uniqueBookingID = (
       Math.floor(100000000 + Math.random() * 900000000) + 1
     ).toString();
-    const bookingData = {
+    const bookingData: Booking = {
       placeBookedID,
       placeBookedName: placeBookedName + " SPIQ",
-      actualBookingID: uniqueBookingID,
+      bookingID: uniqueBookingID,
       userBookingID: currentUser.uid,
       userBookingName: currentUser.displayName,
       userBookingEmail: currentUser.email,
@@ -71,8 +71,7 @@ export class BookingService {
       sessionStatus: false,
       finishedBooking: false,
       sessionStartTime: new Date(),
-      sessionEndTime: null,
-      bookingID: uniqueBookingID
+      sessionEndTime: null
     };
     return new Promise<any>((resolve, reject) => {
       this.bookingCollection.add(bookingData).then(

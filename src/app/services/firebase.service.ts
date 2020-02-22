@@ -33,6 +33,7 @@ export interface Session {
   placeBookedName: String;
   finalPriceSet: boolean;
   totalPrice: number;
+  totalHours: number;
 }
 
 @Injectable({
@@ -88,6 +89,7 @@ export class FirebaseService {
           const placeBookedName = a.payload.doc.data().placeBookedName;
           const totalPrice = a.payload.doc.data().totalPrice;
           const finalPriceSet = a.payload.doc.data().finalPriceSet;
+          const totalHours = a.payload.doc.data().totalHours;
           return {
             id,
             createdBy,
@@ -98,6 +100,7 @@ export class FirebaseService {
             placeBookedName,
             totalPrice,
             finalPriceSet,
+            totalHours,
             ...data
           };
         });
@@ -319,7 +322,7 @@ export class FirebaseService {
       let storageRef = firebase.storage().ref();
       let mydownloadURL = storageRef.getDownloadURL();
       let imageRef = storageRef.child("image").child("imageName");
-      this.encodeImageUri(imageURI, function(image64) {
+      this.encodeImageUri(imageURI, function (image64) {
         imageRef.putString(image64, "data_url").then(
           snapshot => {
             const tokenId = this.authService.getUser().subscribe(data => {
@@ -349,7 +352,7 @@ export class FirebaseService {
     var c = document.createElement("canvas");
     var ctx = c.getContext("2d");
     var img = new Image();
-    img.onload = function() {
+    img.onload = function () {
       var aux: any = this;
       c.width = aux.width;
       c.height = aux.height;

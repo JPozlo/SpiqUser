@@ -16,15 +16,31 @@
         </ion-card-header>
         <ion-card-content>
           <ion-row class="ion-align-items-center">
-            <ion-col size="8">
+            <ion-col>
               <ion-label class="righteous">
-                <b>{{ item.timestampStart.seconds * 1000 | date:'dd/MM/yyyy, HH:mm'}} to
-                  {{ item.timestampEnd.seconds * 1000 | date:'HH:mm'}}</b>
+                <b>{{ item.timestampStart.seconds * 1000 | date:'dd/MM/yyyy, HH:mm'}} to {{ item.timestampEnd.seconds * 1000 |
+                  date:'HH:mm'}}</b>
               </ion-label>
             </ion-col>
-            <ion-col size="4" class="ion-text-right">
+          </ion-row>
+          <ion-row>
+            <ion-col>
               <ion-label>
-                {{ item.coffeeTotalOrderPrice | currency: 'KSH ' }}
+                Coffee: {{ item.coffeeTotalOrderPrice | currency: 'KSH ' }}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label>
+                Hours: {{ item.totalHours }} * KSH 100
+              </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-label>
+                Total: {{ item.totalPrice | currency: 'KSH '}}
               </ion-label>
             </ion-col>
           </ion-row>
@@ -33,16 +49,12 @@
     </ion-grid>
     <ng-template #noHistory>
       <ion-item [routerLink]="['/tab']" routerLinkActive="router-link-active">
-        Your history is lonely :( <br> Care to try
-        one of our places?
+        Your history is lonely :( <br />
+        Care to try one of our places?
       </ion-item>
-
     </ng-template>
   </ion-list>
   <ng-template #loading>
     <ion-progress-bar color="tertiary" type="indeterminate"></ion-progress-bar>
-
-
   </ng-template>
-
 </ion-content>

@@ -104,6 +104,7 @@ export class CoffeePage implements OnInit, OnDestroy {
       if (data.data === 0) {
         this.totalPrice = data.data;
       }
+      this.coffeeService.resetCart();
     });
     modal.present();
   }

@@ -19,7 +19,7 @@ export class SharePage implements OnInit {
   sendShare() {
     const message = "Check out this awesome app, SPIQ, that I have been using!"
     const subject = "SPIQ App Sharing"
-    const URL = "https://mapsdemoone.web.app/"
+    const URL = "https://play.google.com/store/apps/details?id=com.missolova.spiq&hl=en"
     this.socialSharing.share(message, subject, URL);
 
   }
