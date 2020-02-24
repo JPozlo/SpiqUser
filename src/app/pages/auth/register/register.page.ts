@@ -53,8 +53,8 @@ export class RegisterPage implements OnInit {
     this.loadingCtrl
       .create({ keyboardClose: true, message: "Creating account..." })
       .then(loadingEl => {
-        loadingEl.present();
         let authObs = this.authService.signUpUserWithEMail(email, password);
+        loadingEl.present();
         authObs.then(
           res => {
             const id = res.user.uid;
@@ -84,16 +84,25 @@ export class RegisterPage implements OnInit {
             this.isLoading = false;
             loadingEl.dismiss();
             this.navctrl.navigateForward('/tab')
-          },
-          err => {
-            loadingEl.dismiss();
-            let message = `Could not sign up because of ${err}. Try again.`;
-            this.showAlert('Error occured!', message);
           }
-        );
-      });
+        ).catch(errRes => {
+          console.log("Error message below");
+          console.dir(errRes);
+          this.isLoading = false;
+          loadingEl.dismiss();
+          const code = errRes.code;
+          let message = `Could not sign you up. Try again.`
+          if (code === "auth/email-already-in-use") {
+            message = "This email address already exists!";
+          } else if (code === "auth/weak-password") {
+            message = "The password is weak. Enter a strong one.";
+          } else if (code === "auth/invalid-email") {
+            message = "The email is invalid";
+          }
+          this.showAlert('Authentication Failed', message);
+        });
+      }, err => console.dir(err));
   }
-
   loginGoogle() {
     this.authService.myGoogleSignin().then(
       success => {

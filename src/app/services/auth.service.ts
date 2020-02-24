@@ -67,7 +67,7 @@ export class AuthService implements OnDestroy {
   private user: firebase.User;
   private activeLogoutTimer: any;
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   // Pipe first value emitted and convert to promise
   isUserLoggedIn() {
@@ -111,11 +111,7 @@ export class AuthService implements OnDestroy {
             this.storeUserAuthDetails(user);
             this.isAuthenticated = true;
             resolve(res);
-          },
-          err => {
-            this.showAlert("Error", `${err}}`);
-            reject(err);
-          }
+          }, err => reject(err)
         );
     });
   }
@@ -143,8 +139,9 @@ export class AuthService implements OnDestroy {
             this.storeUserAuthDetails(user);
             this.isAuthenticated = true;
             resolve(res);
-          },
-          err => reject(err)
+          }, err => {
+            reject(err);
+          }
         );
     });
   }

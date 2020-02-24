@@ -98,7 +98,11 @@ const routes: Routes = [
   {
     path: 'offlineredirectmodal',
     loadChildren: () => import('./pages/offlineredirectmodal/offlineredirectmodal.module').then(m => m.OfflineredirectmodalPageModule)
+  },  {
+    path: 'sidemenu',
+    loadChildren: () => import('./pages/sidemenu/sidemenu.module').then( m => m.SidemenuPageModule)
   }
+
 
 ];
 

@@ -1,0 +1,43 @@
+<div color="blue-purple" class="header">
+  <div class="image">
+    <ion-thumbnail *ngIf="user.photoURL">
+      <ion-img [src]="user.photoURL"></ion-img>
+    </ion-thumbnail>
+    <ion-thumbnail *ngIf="!user.photoURL">
+      <ion-img src="assets/defaultProfilePic.png"></ion-img>
+    </ion-thumbnail>
+  </div><br>
+  <div class="nametext">
+    <ion-label>{{ user.displayName }}</ion-label>
+  </div>
+</div>
+
+<div class="nav">
+
+  <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+    <div class="nav-item" [routerLink]="[p.url]">
+      <ion-icon slot="start" [name]="p.icon"></ion-icon>
+      {{p.title}}
+      <span class="divider"></span>
+    </div>
+  </ion-menu-toggle>
+</div>
+
+<div class="footer">
+  <div class="footer-nav">
+    <ul>
+      <li (click)="leaveAReview()">Like this app? Leave a review!</li>
+    </ul>
+  </div>
+
+  <div class="footer-social">
+    <ion-icon (click)="openInstagramProfile()" name="logo-instagram"></ion-icon>
+    <ion-icon (click)="openFacebookProfile()" name="logo-facebook"></ion-icon>
+    <ion-icon (click)="openTwitterProfile()" name="logo-twitter"></ion-icon>
+    <ion-icon (click)="openWebsite()" name="globe"></ion-icon>
+  </div>
+
+  <div class="footer-app-version">
+    Version v{{version}}
+  </div>
+</div>

@@ -23,17 +23,21 @@
             <ion-icon name="home" slot="start"></ion-icon>
             <ion-label>Home</ion-label>
           </ion-item>
-          <ion-item routerLink="/profile">
-            <ion-icon name="contact" slot="start"></ion-icon>
-            <ion-label>Profile</ion-label>
+          <ion-item routerLink="/session-history">
+            <ion-icon slot="start" name="hourglass"></ion-icon>
+            <ion-label>Your Sessions</ion-label>
           </ion-item>
           <ion-item routerLink="/settings">
             <ion-icon slot="start" name="build"></ion-icon>
             <ion-label>Settings</ion-label>
           </ion-item>
-          <ion-item routerLink="/session-history">
-            <ion-icon slot="start" name="hourglass"></ion-icon>
-            <ion-label>History</ion-label>
+          <ion-item routerLink="/settings/share">
+            <ion-icon slot="start" name="share"></ion-icon>
+            <ion-label>Invite Your Friends</ion-label>
+          </ion-item>
+          <ion-item [routerLink]="['/settings/about']" routerLinkActive="router-link-active">
+            <ion-label>About Us</ion-label>
+            <ion-icon slot="start" name="information-circle"></ion-icon>
           </ion-item>
           <ion-item (click)="onLogout()" button>
             <ion-icon name="exit" slot="start"></ion-icon>
@@ -42,6 +46,22 @@
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
+
+    <ion-footer class="kanit">
+      <ion-menu-toggle>
+        <ion-row [routerLink]="['/settings/about/legal']" class="ion-align-items-center">
+          <ion-col>
+            <ion-item>
+              <ion-label>
+                Legal
+              </ion-label>
+              <p class="ion-text-right">v{{version}}</p>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-menu-toggle>
+    </ion-footer>
   </ion-menu>
   <ion-router-outlet id="menu"></ion-router-outlet>
+
 </ion-app>

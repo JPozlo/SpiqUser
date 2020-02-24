@@ -74,15 +74,19 @@ export class LoginPage implements OnInit {
             this.navCtrl.navigateForward('/tab')
           },
           errRes => {
+            this.isLoading = false;
             loadingEl.dismiss();
-            const code = errRes.error.error.message;
-            let message = "Could not sign up. Try again.";
-            if (code === "EMAIL_EXISTS") {
-              message = "This email address already exists!";
-            } else if (code === "EMAIL_NOT_FOUND") {
-              message = "Email address not found.";
-            } else if (code === "INVALID_PASSWORD") {
-              message = "This passowrd is not correct.";
+            const code = errRes.code;
+            console.log("Error code", code)
+            let message = "Could not sign you in. Try again.";
+            if (code === "auth/weak-password") {
+              message = "The password is weak. Enter a strong one.";
+            } else if (code === "auth/wrong-password") {
+              message = "This password is not correct.";
+            } else if (code === "auth/invalid-email") {
+              message = "The email is invalid";
+            } else if (code === "auth/user-not-found") {
+              message = "There is no user registered with that account";
             }
             this.showAlert('Authentication Failed', message);
           }

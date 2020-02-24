@@ -1,3 +1,4 @@
+import { FirebaseService } from 'src/app/services/firebase.service';
 import { FirebaseX } from "@ionic-native/firebase-x/ngx";
 import { Network } from "@ionic-native/network/ngx";
 import { NetworkService } from "./services/network.service";
@@ -24,16 +25,21 @@ import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { FirebaseAnalytics } from "@ionic-native/firebase-analytics/ngx";
 import { OfflineredirectmodalPage } from "./pages/offlineredirectmodal/offlineredirectmodal.page";
 
+import * as firebase from 'firebase/app';
+
+
 @Component({
   selector: "app-root",
   templateUrl: "app.component.html",
   styleUrls: ["app.component.scss"]
 })
 export class AppComponent implements OnInit, OnDestroy {
+  version: String = "0.0.3";
   showSplash = true;
   private firebaseX: FirebaseX;
 
   private previousAuthState = false;
+  user;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -47,6 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private toastCtrl: ToastController,
     private menuCtrl: MenuController,
     private networkService: NetworkService,
+    private firebaseService: FirebaseService,
     private actionSheetCtrl: ActionSheetController,
     private network: Network,
     private alertCtrl: AlertController,
@@ -157,7 +164,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() { }
 
   showAlert(title, message) {
     this.alertCtrl

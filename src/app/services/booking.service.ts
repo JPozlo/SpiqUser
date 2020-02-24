@@ -18,7 +18,6 @@ export interface Booking {
   bookingID: String;
   placeBookedID;
   placeBookedName;
-  actualBookingID;
   userBookingID;
   userBookingName;
   userBookingEmail;

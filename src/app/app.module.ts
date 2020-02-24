@@ -1,3 +1,4 @@
+import { SidemenuPage } from './pages/sidemenu/sidemenu.page';
 import { environment } from "./../environments/environment.prod";
 import { CartModalPageModule } from "./pages/coffee/cart-modal/cart-modal.module";
 import { WebView } from "@ionic-native/ionic-webview/ngx";
@@ -55,7 +56,7 @@ import { BookingService } from "./services/booking.service";
 import { OfflineredirectmodalPageModule } from "./pages/offlineredirectmodal/offlineredirectmodal.module";
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, SidemenuPage],
   entryComponents: [],
   imports: [
     BrowserModule,
@@ -108,4 +109,4 @@ import { OfflineredirectmodalPageModule } from "./pages/offlineredirectmodal/off
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -15,7 +15,7 @@ export class FcmService {
     private firebase: FirebaseX,
     private platform: Platform,
     private authService: AuthService
-  ) {}
+  ) { }
 
   async getToken() {
     let token;
@@ -36,7 +36,7 @@ export class FcmService {
       token,
       userId: userData.uid
     };
-    return devicesCollection.doc(token).set(data);
+    return devicesCollection.doc(userData.uid).set(data);
   }
 
   onNotifications() {
