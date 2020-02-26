@@ -13,12 +13,15 @@ const routes: Routes = [
         path: "map",
         loadChildren: () =>
           import("./../map/map.module").then(m => m.MapPageModule)
-        // canLoad: [AuthGuard],
       },
       {
         path: "coffee",
         loadChildren: () =>
           import("../coffee/coffee.module").then(m => m.CoffeePageModule)
+      },
+      {
+        path: 'locker',
+        loadChildren: () => import('../locker/locker.module').then(m => m.LockerPageModule)
       }
     ]
   },
@@ -33,4 +36,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TabPageRoutingModule {}
+export class TabPageRoutingModule { }

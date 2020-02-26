@@ -23,9 +23,9 @@
             <ion-icon name="home" slot="start"></ion-icon>
             <ion-label>Home</ion-label>
           </ion-item>
-          <ion-item routerLink="/session-history">
+          <ion-item routerLink="/history">
             <ion-icon slot="start" name="hourglass"></ion-icon>
-            <ion-label>Your Sessions</ion-label>
+            <ion-label>Your History</ion-label>
           </ion-item>
           <ion-item routerLink="/settings">
             <ion-icon slot="start" name="build"></ion-icon>
@@ -35,7 +35,7 @@
             <ion-icon slot="start" name="share"></ion-icon>
             <ion-label>Invite Your Friends</ion-label>
           </ion-item>
-          <ion-item [routerLink]="['/settings/about']" routerLinkActive="router-link-active">
+          <ion-item routerLink="/settings/about" routerLinkActive="router-link-active">
             <ion-label>About Us</ion-label>
             <ion-icon slot="start" name="information-circle"></ion-icon>
           </ion-item>
@@ -49,7 +49,7 @@
 
     <ion-footer class="kanit">
       <ion-menu-toggle>
-        <ion-row [routerLink]="['/settings/about/legal']" class="ion-align-items-center">
+        <ion-row routerLink="/settings/about/legal" class="ion-align-items-center">
           <ion-col>
             <ion-item>
               <ion-label>

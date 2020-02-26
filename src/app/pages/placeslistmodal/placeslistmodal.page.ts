@@ -40,6 +40,8 @@ export class PlaceslistmodalPage implements OnInit {
   place: any;
   myplaceList = [];
 
+  bookingStatus: boolean;
+
   freeSeatStatus: boolean;
 
   constructor(
@@ -57,9 +59,13 @@ export class PlaceslistmodalPage implements OnInit {
       console.log(`Status of seats: ${res}`);
       this.freeSeatStatus = res;
     });
+
+    this.bookingService.checkBookingStatus().subscribe(res => {
+      this.bookingStatus = res;
+    })
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   filterPlaces() {
     for (let i = 0; i < this.placesList.length; i++) {
@@ -104,12 +110,16 @@ export class PlaceslistmodalPage implements OnInit {
           text: "Book",
           icon: "checkmark-circle",
           handler: () => {
-            this.bookingService
-              .createBooking(placeId, placeName)
-              .then(success => {
-                console.log("Sent to firebase after click");
-                this.modalCtrl.dismiss();
-              });
+            if (!this.bookingStatus) {
+              this.bookingService
+                .createBooking(placeId, placeName)
+                .then(success => {
+                  console.log("Sent to firebase after click");
+                  this.modalCtrl.dismiss();
+                });
+            } else {
+              this.showAlert("Sorry", `You cannot book ${placeName} as you already have an active booking.`)
+            }
           }
         },
         {

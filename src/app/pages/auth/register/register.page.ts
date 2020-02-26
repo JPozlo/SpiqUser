@@ -72,6 +72,7 @@ export class RegisterPage implements OnInit {
               isSessionActive: false,
               image: user.photoURL,
               role: "user",
+              bookingStatus: false
             };
 
             console.log("Response of signing in is ", res);
@@ -115,6 +116,7 @@ export class RegisterPage implements OnInit {
           isSessionActive: false,
           image: user.photoURL,
           role: "user",
+          bookingStatus: false
         };
 
         this.userService.addUser(NewUser);

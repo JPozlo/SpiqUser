@@ -88,20 +88,32 @@ const routes: Routes = [
     canLoad: [LoginGuard]
   },
   {
+    path: 'offlineredirectmodal',
+    loadChildren: () => import('./pages/offlineredirectmodal/offlineredirectmodal.module').then(m => m.OfflineredirectmodalPageModule)
+  },
+  {
+    path: 'sidemenu',
+    loadChildren: () => import('./pages/sidemenu/sidemenu.module').then(m => m.SidemenuPageModule)
+  },
+  {
+    path: 'history',
+    loadChildren: () => import('./pages/history/history.module').then(m => m.HistoryPageModule),
+    canLoad: [LoginGuard]
+  },
+  {
+    path: "locker-history",
+    loadChildren: () => import('./pages/locker-history/locker-history.module').then(m => m.LockerHistoryPageModule),
+    canLoad: [LoginGuard]
+  },
+  {
     path: "session-history",
     loadChildren: () =>
       import("./pages/session-history/session-history.module").then(
         m => m.SessionHistoryPageModule
       ),
     canLoad: [LoginGuard]
-  },
-  {
-    path: 'offlineredirectmodal',
-    loadChildren: () => import('./pages/offlineredirectmodal/offlineredirectmodal.module').then(m => m.OfflineredirectmodalPageModule)
-  },  {
-    path: 'sidemenu',
-    loadChildren: () => import('./pages/sidemenu/sidemenu.module').then( m => m.SidemenuPageModule)
   }
+
 
 
 ];

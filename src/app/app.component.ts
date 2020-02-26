@@ -34,7 +34,7 @@ import * as firebase from 'firebase/app';
   styleUrls: ["app.component.scss"]
 })
 export class AppComponent implements OnInit, OnDestroy {
-  version: String = "0.0.3";
+  version: String = "0.0.4";
   showSplash = true;
   private firebaseX: FirebaseX;
 

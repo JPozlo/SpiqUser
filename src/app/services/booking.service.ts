@@ -21,6 +21,7 @@ export interface Booking {
   userBookingID;
   userBookingName;
   userBookingEmail;
+  uniqueID: String;
   userBookingPhone;
   totalCoffeePrice: number;
   sessionStatus: boolean;
@@ -28,6 +29,7 @@ export interface Booking {
   finishedBooking: boolean;
   sessionStartTime?: Date;
   sessionEndTime?: Date;
+  totalPrice: number;
 }
 
 @Injectable({
@@ -36,10 +38,11 @@ export interface Booking {
 export class BookingService {
   bookingCollection: AngularFirestoreCollection<Booking>;
 
+  bookingStatus: boolean;
+
   private place: Place;
   private seatsAvailable: number = 60;
   private thisDeviceId: string;
-  private uniqueId = (Math.floor(Math.random() * 5000000) + 1).valueOf();
 
   constructor(
     private authService: AuthService,
@@ -54,6 +57,7 @@ export class BookingService {
 
   createBooking(placeBookedID, placeBookedName) {
     let currentUser = this.authService.getUser();
+    let uniqueId = (Math.floor(Math.random() * (999 - 100 + 1) + 100)).toString();
     let uniqueBookingID = (
       Math.floor(100000000 + Math.random() * 900000000) + 1
     ).toString();
@@ -61,6 +65,7 @@ export class BookingService {
       placeBookedID,
       placeBookedName: placeBookedName + " SPIQ",
       bookingID: uniqueBookingID,
+      uniqueID: uniqueId,
       userBookingID: currentUser.uid,
       userBookingName: currentUser.displayName,
       userBookingEmail: currentUser.email,
@@ -70,15 +75,17 @@ export class BookingService {
       sessionStatus: false,
       finishedBooking: false,
       sessionStartTime: new Date(),
-      sessionEndTime: null
+      sessionEndTime: null,
+      totalPrice: 0
     };
     return new Promise<any>((resolve, reject) => {
       this.bookingCollection.add(bookingData).then(
         res => {
+          this.changeBookingStatus();
           this.modifySeatsAvailable(bookingData.placeBookedID);
           this.showAlert(
             "Booked",
-            `You have booked ${placeBookedName} successfully! and your booking id is ${uniqueBookingID}`
+            `You have booked ${placeBookedName} successfully! and your booking id is ${uniqueId}`
           );
           resolve(res);
         },
@@ -88,6 +95,41 @@ export class BookingService {
         }
       );
     }).catch(err => this.showAlert("Error", `${err}`));
+  }
+
+  changeBookingStatus() {
+    const db = firebase.firestore();
+    const user = this.authService.getUser();
+    const userID = user.uid;
+
+    const myRef = db
+      .collection("users")
+      .where("id", "==", userID);
+    myRef.get().then(snap => {
+      snap.forEach(doc => {
+        const docRef = db.collection("users").doc(userID)
+        docRef.set({
+          bookingStatus: true
+        }, { merge: true });
+      })
+    }).catch(err => console.log(err));
+
+  }
+
+
+  checkBookingStatus() {
+    const db = firebase.firestore();
+    const currentUser = this.authService.getUser();
+    const bookingsRef = db.collection("users").where('id', "==", currentUser.uid);
+    return new Observable<boolean>(observer => {
+      const status = bookingsRef.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.bookingStatus = doc.data().bookingStatus;
+        });
+        observer.next(this.bookingStatus);
+      });
+      return status;
+    });
   }
 
   modifyOnePlace() {

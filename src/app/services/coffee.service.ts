@@ -17,10 +17,10 @@ export class CoffeeService {
   totalPrice;
 
   data: Coffee[] = [
-    { id: 0, name: 'Cappuchino Large', price: 100, amount: 0 },
-    { id: 1, name: 'Expresso Large', price: 100, amount: 0 },
-    { id: 2, name: 'Cappuchino Medium', price: 100, amount: 0 },
-    { id: 3, name: 'Expresso Medium', price: 100, amount: 0 }
+    { id: 0, name: 'Cappuchino Large', price: 100, amount: 1 },
+    { id: 1, name: 'Expresso Large', price: 100, amount: 1 },
+    { id: 2, name: 'Cappuchino Medium', price: 100, amount: 1 },
+    { id: 3, name: 'Expresso Medium', price: 100, amount: 1 }
   ];
 
   private cart = [];
@@ -67,7 +67,7 @@ export class CoffeeService {
       if (c.id === coffee.id) {
         c.amount -= 1;
         if (c.amount == 0) {
-          c.amount = 0;
+          c.amount = 1;
           this.cart.splice(index, 1);
         }
       }
@@ -80,7 +80,7 @@ export class CoffeeService {
     for (let [index, c] of this.cart.entries()) {
       if (c.id === coffee.id) {
         this.cartItemCount.next(this.cartItemCount.value - c.amount);
-        c.amount = 0;
+        c.amount = 1;
         this.cart.splice(index, 1);
       }
     }

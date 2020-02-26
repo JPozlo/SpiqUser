@@ -56,7 +56,7 @@ export class CartModalPage implements OnInit {
   }
 
   close() {
-    this.coffeeService.resetCart();
+    // this.coffeeService.resetCart();
     this.modalCtrl.dismiss();
   }
 

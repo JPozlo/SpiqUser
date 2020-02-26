@@ -26,6 +26,7 @@ export interface User {
   isSessionActive: boolean;
   image: string;
   role: string;
+  bookingStatus: boolean;
 }
 
 @Injectable({
@@ -61,6 +62,7 @@ export class UserService {
           const image = a.payload.doc.data().image;
           const phoneNo = a.payload.doc.data().phoneNo;
           const role = a.payload.doc.data().role;
+          const bookingStatus = a.payload.doc.data().bookingStatus;
           return {
             id,
             email,
@@ -69,6 +71,7 @@ export class UserService {
             image,
             phoneNo,
             role,
+            bookingStatus,
             ...data
           };
         });

@@ -106,6 +106,7 @@ export class LoginPage implements OnInit {
           isSessionActive: false,
           image: user.photoURL,
           role: "user",
+          bookingStatus: false
         };
         this.userService.addUser(NewUser);
         this.authService.storeUserAuthDetails(user);

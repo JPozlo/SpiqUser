@@ -1,27 +1,18 @@
 import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
 import { AlertController } from "@ionic/angular";
 import { AuthService } from "./auth.service";
-import { AngularFireAuth } from "@angular/fire/auth";
 import {
   AngularFirestore,
   AngularFirestoreCollection
 } from "@angular/fire/firestore";
 import { Injectable } from "@angular/core";
 
-import { ImagePicker } from "@ionic-native/image-picker/ngx";
-import { Crop } from "@ionic-native/crop/ngx";
-import {
-  FileTransfer,
-  FileTransferObject,
-  FileUploadOptions
-} from "@ionic-native/file-transfer/ngx";
-
 import * as firebase from "firebase/app";
 import { map } from "rxjs/operators";
 import { Observable, pipe, BehaviorSubject, of } from "rxjs";
-import { User } from "./user.service";
 import { Timestamp } from "@google-cloud/firestore";
 // import { FieldValue } from "@google-cloud/firestore";
+
 
 export interface Session {
   id: string;
@@ -36,18 +27,37 @@ export interface Session {
   totalHours: number;
 }
 
+export interface Locker {
+  lockerID: String;
+  storageBooked: boolean;
+}
+export interface LockersBookingHistory {
+  userID: String;
+  userName: String;
+  lockerID: String;
+  finished: boolean;
+  userEmail: String;
+  uniqueID: String;
+  price: number;
+  timeBooked: firebase.firestore.Timestamp;
+  timeItemTaken: firebase.firestore.Timestamp;
+}
+
 @Injectable({
   providedIn: "root"
 })
 export class FirebaseService {
+  private db = firebase.firestore();
   numb = new BehaviorSubject(0);
   sessionCollection: AngularFirestoreCollection;
   sessions: Observable<Session[]>;
   session;
+  locker;
   customSessions: Observable<Session[]>;
   mySessions;
   coffeePrice = 0;
   isUserActive: boolean;
+  lockerStatus: boolean;
   user;
   username;
   email;
@@ -63,49 +73,63 @@ export class FirebaseService {
   priceUpdateSuccessful: boolean;
 
   constructor(
-    private imgPicker: ImagePicker,
-    private crop: Crop,
-    private fileTransfer: FileTransfer,
     private androidPermissions: AndroidPermissions,
     private alertCtrl: AlertController,
     private afStore: AngularFirestore,
-    private afAuth: AngularFireAuth,
     private authService: AuthService
   ) {
     this.isUserActive = false;
 
     this.sessionCollection = this.afStore.collection("sessions");
-    this.customSessions = this.sessionCollection.snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data;
-          const id = a.payload.doc.id;
-          const createdBy = a.payload.doc.data().createdBy;
-          const coffeeTotalOrderPrice = a.payload.doc.data()
-            .coffeeTotalOrderPrice;
-          const timestampStart = a.payload.doc.data().timestampStart;
-          const timestampEnd = a.payload.doc.data().timestampEnd;
-          const isActive = a.payload.doc.data().isActive;
-          const placeBookedName = a.payload.doc.data().placeBookedName;
-          const totalPrice = a.payload.doc.data().totalPrice;
-          const finalPriceSet = a.payload.doc.data().finalPriceSet;
-          const totalHours = a.payload.doc.data().totalHours;
-          return {
-            id,
-            createdBy,
-            coffeeTotalOrderPrice,
-            timestampStart,
-            timestampEnd,
-            isActive,
-            placeBookedName,
-            totalPrice,
-            finalPriceSet,
-            totalHours,
-            ...data
-          };
-        });
-      })
+    this.customSessions = this.sessionCollection.snapshotChanges().pipe(map(actions => {
+      return actions.map(a => {
+        const data = a.payload.doc.data;
+        const id = a.payload.doc.id;
+        const createdBy = a.payload.doc.data().createdBy;
+        const coffeeTotalOrderPrice = a.payload.doc.data().coffeeTotalOrderPrice;
+        const timestampStart = a.payload.doc.data().timestampStart;
+        const timestampEnd = a.payload.doc.data().timestampEnd;
+        const isActive = a.payload.doc.data().isActive;
+        const placeBookedName = a.payload.doc.data().placeBookedName;
+        const totalPrice = a.payload.doc.data().totalPrice;
+        const finalPriceSet = a.payload.doc.data().finalPriceSet;
+        const totalHours = a.payload.doc.data().totalHours;
+        return {
+          id,
+          createdBy,
+          coffeeTotalOrderPrice,
+          timestampStart,
+          timestampEnd,
+          isActive,
+          placeBookedName,
+          totalPrice,
+          finalPriceSet,
+          totalHours,
+          ...data
+        };
+      });
+    })
     );
+  }
+
+  addToLockerHistory(lockerID, uniqueID) {
+    const userData = this.authService.getUser();
+    const historyRef = this.db.collection("lockersBookingHistory").doc();
+    historyRef.set({
+      userID: userData.uid,
+      userEmail: userData.email,
+      userName: userData.displayName,
+      lockerID: lockerID,
+      price: 0,
+      finished: false,
+      uniqueID: uniqueID,
+      timeBooked: firebase.firestore.Timestamp.now(),
+      timeItemTaken: null
+    }, { merge: true }).then(res => console.log("Successfully added to locker history")).catch(err => {
+      console.log("Error adding to locker history below")
+      console.dir(err)
+    })
+
   }
 
   async showAlert(header: string, message: string) {
@@ -118,62 +142,80 @@ export class FirebaseService {
     await alert.present();
   }
 
+  lockerDataSet(docNumber) {
+    const customData: Locker = {
+      lockerID: docNumber,
+      storageBooked: false,
+    }
+    return customData;
+  }
+
+  getLockerHistory() {
+    const user = this.authService.getUser();
+    const userID = user.uid;
+    const lockerRef = this.afStore.collection<LockersBookingHistory>("lockersBookingHistory", ref => ref.where("finished", "==", true).where("userID", "==", userID));
+    const locker$: Observable<LockersBookingHistory[]> = lockerRef.valueChanges().pipe(
+      map(lockers => {
+        console.log("Booked Lockers", lockers);
+        return lockers;
+      })
+    );
+    return locker$;
+  }
+
+  bookLocker(lockerID) {
+    const userData = this.authService.getUser();
+    const lockerRef = this.db.collection("lockers").doc(lockerID);
+    const bookPromise = lockerRef.set({
+      storageBooked: true,
+      price: 0
+    }, { merge: true }).then(res => console.log("Successfully booked locker")).catch(err => {
+      console.log("Error booking locker below")
+      console.dir(err)
+    })
+    return bookPromise;
+
+  }
+
+  getFreeLockers() {
+    const lockerRef = this.afStore.collection<Locker>("lockers", ref => ref.where("storageBooked", "==", false));
+
+    const locker$: Observable<Locker[]> = lockerRef.valueChanges().pipe(
+      map(lockers => {
+        console.log("Active Bookings ", lockers);
+        return lockers;
+      })
+    );
+
+    return locker$;
+  }
+
+  addLocker() {
+    const batch = this.db.batch();
+    for (var i = 1; i <= 60; i++) {
+      var docNo = i.toString();
+      var lockerRef = this.db.collection("lockers").doc(docNo);
+      batch.set(lockerRef, this.lockerDataSet(docNo), { merge: true })
+    }
+    batch.commit().then(res => {
+      console.log("Successfully added lockers", res)
+    }).catch(err => {
+      console.log("Error adding lockers")
+      console.dir(err)
+    })
+
+  }
+
   getAllTimes() {
     return this.customSessions;
   }
 
-  // Get the hourly total price
-  getStartTime() {
-    const db = firebase.firestore();
-
-    const user = this.authService.getUser();
-    const userID = user.uid;
-
-    const myRef = db
-      .collection("sessions")
-      .where("isActive", "==", true)
-      .where("id", "==", userID);
-
-    return new Observable<Timestamp>(observer => {
-      const time = myRef.onSnapshot(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          this.timeStart = doc.data().timestampStart;
-        });
-        observer.next(this.timeStart);
-      });
-      return time;
-    });
-  }
-
-  getEndTime() {
-    const db = firebase.firestore();
-
-    const user = this.authService.getUser();
-    const userID = user.uid;
-
-    const myRef = db
-      .collection("sessions")
-      .where("timestampEnd", "==", !null)
-      .where("id", "==", userID);
-
-    return new Observable<Timestamp>(observer => {
-      const time = myRef.onSnapshot(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          this.timeStop = doc.data().timestampEnd;
-        });
-        observer.next(this.timeStop);
-      });
-      return time;
-    });
-  }
-
   // Get history of sessions
   getUserSessions() {
-    const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
 
-    const myRef = db
+    const myRef = this.db
       .collection("sessions")
       .where("id", "==", userID)
       .where("isActive", "==", false);
@@ -195,17 +237,16 @@ export class FirebaseService {
 
   // Update the user coffee ordered to admin side in booking DB
   updateBookingCoffeeValues(coffee, coffeePrice) {
-    const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
-    db.collection("bookings")
+    this.db.collection("bookings")
       .where("userBookingID", "==", userID)
       .where("finishedBooking", "==", false)
       .where("sessionStatus", "==", true)
       .get()
       .then(snap => {
         snap.forEach(doc => {
-          const docRef = db.collection("bookings").doc(doc.id);
+          const docRef = this.db.collection("bookings").doc(doc.id);
           const oldCoffeePrice = doc.data().totalCoffeePrice;
           const newCoffeePriceTotal = oldCoffeePrice + coffeePrice;
           docRef
@@ -233,13 +274,12 @@ export class FirebaseService {
 
   // Update the coffee price in the session DB
   updateCoffeeSession(coffeePrice) {
-    const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
     // let timestart: Timestamp;
     // timestart.toDate().getMinutes();
 
-    db.collection("sessions")
+    this.db.collection("sessions")
       .where("isActive", "==", true)
       .where("id", "==", userID)
       .get()
@@ -247,7 +287,7 @@ export class FirebaseService {
         snap => {
           snap.forEach(doc => {
             const userState = doc.data().coffeeTotalOrderPrice;
-            const docRef = db.collection("sessions").doc(doc.id);
+            const docRef = this.db.collection("sessions").doc(doc.id);
             const newCoffeePriceTotal = userState + coffeePrice;
             docRef
               .set(
@@ -278,11 +318,10 @@ export class FirebaseService {
 
   // Check session status to use in coffee checkout
   getCurrentSessionStatus() {
-    const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
 
-    const myRef = db.collection("users").where("id", "==", userID);
+    const myRef = this.db.collection("users").where("id", "==", userID);
     return new Observable<boolean>(observer => {
       const status = myRef.onSnapshot(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -296,11 +335,10 @@ export class FirebaseService {
 
   // Get the total coffee price for displaying to the user
   getCoffeeTotalPrice() {
-    const db = firebase.firestore();
     const user = this.authService.getUser();
     const userID = user.uid;
 
-    const myRef = db
+    const myRef = this.db
       .collection("bookings")
       .where("userBookingID", "==", userID)
       .where("finishedBooking", "==", false)
@@ -315,51 +353,5 @@ export class FirebaseService {
       });
       return price;
     });
-  }
-
-  uploadImage(imageURI) {
-    return new Promise<any>((resolve, reject) => {
-      let storageRef = firebase.storage().ref();
-      let mydownloadURL = storageRef.getDownloadURL();
-      let imageRef = storageRef.child("image").child("imageName");
-      this.encodeImageUri(imageURI, function (image64) {
-        imageRef.putString(image64, "data_url").then(
-          snapshot => {
-            const tokenId = this.authService.getUser().subscribe(data => {
-              const id = data.id;
-              const email = data.email;
-              const username = data.email.split("@gmail.com");
-              const tokenId = data.getToken();
-              const imageUrl = mydownloadURL;
-              const mydata = {
-                id,
-                email,
-                tokenId,
-                imageUrl
-              };
-              this.userCollection.add(mydata);
-            });
-          },
-          err => {
-            reject(err);
-          }
-        );
-      });
-    });
-  }
-
-  encodeImageUri(imageUri, callback) {
-    var c = document.createElement("canvas");
-    var ctx = c.getContext("2d");
-    var img = new Image();
-    img.onload = function () {
-      var aux: any = this;
-      c.width = aux.width;
-      c.height = aux.height;
-      ctx.drawImage(img, 0, 0);
-      var dataURL = c.toDataURL("image/jpeg");
-      callback(dataURL);
-    };
-    img.src = imageUri;
   }
 }
