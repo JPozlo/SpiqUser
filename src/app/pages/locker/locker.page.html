@@ -10,10 +10,12 @@
 <ion-content>
   <div *ngIf="lockers | async as locker; else loading">
     <ion-grid *ngIf="locker.length > 0; else noLocker">
-      <ion-label>Choose a locker number to book: </ion-label>
-      <br>
+      <ion-label>Choose which storage locker to book by clicking on the preferred locker
+        number:
+      </ion-label>
+      <br />
 
-      <ion-chip color="blue-green" *ngFor="let item of locker">
+      <ion-chip class="chip-size" color="blue-green" *ngFor="let item of locker">
         <ion-row>
           <ion-col>
             <ion-label (click)="presentActionSheet(item.lockerID)">{{ item.lockerID }}</ion-label>
@@ -23,12 +25,12 @@
     </ion-grid>
     <ng-template #noLocker>
       <ion-item>
-        All of our lockers are currently booked but you can check again later. Sorry for the inconvenience.
+        All of our storage lockers are currently booked but you can check again
+        later. Sorry for the inconvenience.
       </ion-item>
     </ng-template>
   </div>
   <ng-template #loading>
     <ion-progress-bar color="tertiary" type="indeterminate"></ion-progress-bar>
   </ng-template>
-
 </ion-content>

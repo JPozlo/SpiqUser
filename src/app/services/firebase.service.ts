@@ -39,6 +39,7 @@ export interface LockersBookingHistory {
   userEmail: String;
   uniqueID: String;
   price: number;
+  placedItem: boolean;
   timeBooked: firebase.firestore.Timestamp;
   timeItemTaken: firebase.firestore.Timestamp;
 }
@@ -168,7 +169,8 @@ export class FirebaseService {
     const lockerRef = this.db.collection("lockers").doc(lockerID);
     const bookPromise = lockerRef.set({
       storageBooked: true,
-      price: 0
+      price: 0,
+      placedItem: false
     }, { merge: true }).then(res => console.log("Successfully booked locker")).catch(err => {
       console.log("Error booking locker below")
       console.dir(err)

@@ -40,13 +40,13 @@ exports.addLockerPriceHistory = functions.firestore.document("/lockersBookingHis
         const token = doc.data().token;
         const payload = {
           notification: {
-            title: `Locker Storage cleared`,
-            body: `The total price for locker storage is KSH ${price}.00`,
+            title: `Storage Locker cleared`,
+            body: `The total price for Storage Locker Services is KSH ${price}.00`,
             sound: "default"
           },
           data: {
-            notification_body: `The total price for locker storage is KSH ${price}.00`,
-            notification_title: "Locker Storage cleared",
+            notification_body: `The total price for Storage Locker Services is KSH ${price}.00`,
+            notification_title: "Storage Locker cleared",
             notification_android_visibility: "1",
             notification_android_priority: "1"
           }

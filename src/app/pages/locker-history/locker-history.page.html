@@ -12,7 +12,7 @@
     <ion-grid *ngIf="locker.length > 0; else noHistory">
       <ion-card *ngFor="let item of locker">
         <ion-card-header>
-          <ion-card-title class="comfortaa">{{ item.lockerID }}</ion-card-title>
+          <ion-card-title class="comfortaa">Storage Locker No: {{ item.lockerID }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <ion-row class="ion-align-items-center">

@@ -15,10 +15,6 @@ export class LockerPage implements OnInit {
 
   constructor(private firebaseService: FirebaseService, private controllerService: ControllersService, private actionSheetctrl: ActionSheetController) {
     this.lockers = firebaseService.getFreeLockers()
-    // firebaseService.getFreeLockers().subscribe(data => {
-    //   data.sort(sortByID);
-    //   console.log("Sorted lockers: ", data);
-    // })
   }
 
   ngOnInit() {
@@ -43,7 +39,7 @@ export class LockerPage implements OnInit {
 
   presentActionSheet(lockerID) {
     this.actionSheetctrl.create({
-      header: `Do you want to book locker number: ${lockerID}`, buttons: [{
+      header: `Do you want to book storage locker number: ${lockerID}`, buttons: [{
         text: "Yes",
         handler: () => {
           this.bookLocker(lockerID);

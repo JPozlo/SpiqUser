@@ -1,7 +1,9 @@
+import { ControllersService } from './../../../../../../../emailLinkWebApp/services/controllers.service';
 import { NgForm } from "@angular/forms";
 import { Component, OnInit } from "@angular/core";
 import { AnalysisCrashService } from "src/app/services/analysis-crash.service";
 import { AndroidPermissions } from "@ionic-native/android-permissions/ngx";
+import { EmailComposer } from '@ionic-native/email-composer/ngx';
 
 @Component({
   selector: "app-help",
@@ -13,48 +15,36 @@ export class HelpPage implements OnInit {
 
   constructor(
     private analysisService: AnalysisCrashService,
-    private androidPermissions: AndroidPermissions
+    private androidPermissions: AndroidPermissions,
+    private composer: EmailComposer,
+    private controllers: ControllersService
   ) {
     this.analysisService.setPageName("Help Page");
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  // sendEmail(emailBody: string) {
-  //   let email = {
-  //     to: 'spiqreaders@gmail.com',
-  //     cc: 'ozlocollins@gmail.com',
-  //     subject: 'SPIQ Help Message',
-  //     body: emailBody,
-  //     isHtml: true
-  //   }
-  //   this.emailComposer.hasPermission().then((hasPermission) => {
-  //     if (hasPermission) {
-  //       this.emailComposer.isAvailable().then((available: boolean) => {
-  //         if (available) {
-  //           this.emailComposer.open(email);
-  //         }
-  //       })
-  //     } else {
-  //       this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.GET_ACCOUNTS_PRIVILEGED).then((granted) => {
-  //         this.emailComposer.isAvailable().then((available: boolean) => {
-  //           if (available) {
-  //             this.emailComposer.open(email);
-  //           }
-  //         })
-  //       }, err => {
-  //         console.log('Permission rejected! ', err);
-  //       })
-  //     }
-  //   })
+  sendEmail() {
+    this.sendEmailFunction();
+    // this.composer.hasPermission().then(has => {
+    //   if (has) {
+    //     this.sendEmailFunction();
+    //   } else {
+    //     this.composer.requestPermission().then(granted => {
+    //       if (granted) {
+    //         this.sendEmailFunction();
+    //       } else {
+    //         this.controllers.showAlert("Sorry for the inconvenience", "We need your permission to enable you to send us your problems via email easily.")
+    //       }
+    //     })
+    //   }
+    // })
+  }
 
-  // }
-
-  // onSubmit(form: NgForm) {
-  //   this.helpMessage = form.value.helpMsg;
-
-  //   // send mmsg to our support email
-
-  //   this.sendEmail(this.helpMessage);
-  // }
+  sendEmailFunction() {
+    this.composer.open({
+      to: 'spiqreaders@gmail.com'
+    }).then(res => console.log(res))
+      .catch(err => this.controllers.showAlert("Sorry", "There is a problem opening the email"));
+  }
 }
